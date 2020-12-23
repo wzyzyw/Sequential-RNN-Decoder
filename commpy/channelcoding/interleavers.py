@@ -26,7 +26,7 @@ class _Interleaver:
             Interleaved output data.
 
         """
-        out_array = array(map(lambda x: in_array[x], self.p_array))
+        out_array = array(list(map(lambda x: in_array[x], self.p_array)))
         return out_array
 
     def deinterlv(self, in_array):

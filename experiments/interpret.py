@@ -55,13 +55,13 @@ class Interpret(object):
             network_saved_path = self.network_saved_path
 
         rnn_type    = self.rnn_type   #'gru', 'lstm'
-        print '[BCJR RNN Interpret] using model type', rnn_type
-        print '[BCJR RNN Interpret] using model path', network_saved_path
+        print('[BCJR RNN Interpret] using model type', rnn_type)
+        print('[BCJR RNN Interpret] using model path', network_saved_path)
 
         batch_size    = 32
 
-        print '[RNN Model] Block length', self.block_len
-        print '[RNN Model] Evaluate Batch size', batch_size
+        print('[RNN Model] Block length', self.block_len)
+        print('[RNN Model] Evaluate Batch size', batch_size)
 
         ####################################################
         # Define Model
@@ -150,7 +150,7 @@ class Interpret(object):
             noiser = ['awgn', sigma]
         else:
             noiser = ['t-dist', sigma, 3, -1, -1, -1, [-1, -1, -1]]
-            print noiser
+            print(noiser)
 
         codec  = [trellis1, trellis2, interleaver]
         X_feed_test, X_message_test = build_rnn_data_feed(self.num_block, self.block_len, noiser, codec,
@@ -249,7 +249,7 @@ class Interpret(object):
         dec_iter_num    = 6
         num_hidden_unit = 200
 
-        print '[BCJR RNN Interpret] number of block is', self.num_block
+        print('[BCJR RNN Interpret] number of block is', self.num_block)
 
         model = load_model(interleave_array=interleaver.p_array, network_saved_path = self.network_saved_path, block_len=self.block_len,
                            dec_iter_num = dec_iter_num, num_hidden_unit=num_hidden_unit)
@@ -258,7 +258,7 @@ class Interpret(object):
             noiser = ['awgn', sigma]
         else:
             noiser = ['t-dist', sigma, 3, -1, -1, -1, [-1, -1, -1]]
-            print noiser
+            print(noiser)
 
         codec  = [trellis1, trellis2, interleaver]
         X_feed_test, X_message_test = build_rnn_data_feed(self.num_block, self.block_len, noiser, codec, is_all_zero=False)
@@ -284,8 +284,8 @@ class Interpret(object):
             map_ber_non_bursty = np.stack(map_ber_list, axis=0)
             map_ber_non_bursty = np.mean(map_ber_non_bursty, axis=0).tolist()[0]
 
-            print '[BCJR RNN Interpret] RNN BER for Non Bursty Noise Case', rnn_ber_non_bursty
-            print '[BCJR RNN Interpret] BCJR BER for Non Bursty Noise Case', map_ber_non_bursty
+            print('[BCJR RNN Interpret] RNN BER for Non Bursty Noise Case', rnn_ber_non_bursty)
+            print('[BCJR RNN Interpret] BCJR BER for Non Bursty Noise Case', map_ber_non_bursty)
 
         if is_compute_bursty:
             for bit_pos in bit_pos_list:
@@ -311,8 +311,8 @@ class Interpret(object):
             map_ber_bursty = np.stack(map_ber_list, axis=0)
             map_ber_bursty = np.mean(map_ber_bursty, axis=0).tolist()[0]
 
-            print '[BCJR RNN Interpret] RNN BER for Bursty Noise Case', rnn_ber_bursty
-            print '[BCJR RNN Interpret] BCJR BER for Bursty Noise Case', map_ber_bursty
+            print('[BCJR RNN Interpret] RNN BER for Bursty Noise Case', rnn_ber_bursty)
+            print('[BCJR RNN Interpret] BCJR BER for Bursty Noise Case', map_ber_bursty)
         #
 
 
@@ -337,7 +337,7 @@ class Interpret(object):
 
 
 def likelihood_snr_range():
-    print '[Interpret] Likelihood output of BCJR/RNN'
+    print('[Interpret] Likelihood output of BCJR/RNN')
     ###############################################
     # Input Parameters
     ###############################################
@@ -822,7 +822,7 @@ def likelihood_model_compare():
     plt.show()
 
 def ber_rnn_compare():
-    print '[Interpret] Comparing between different RNN models'
+    print('[Interpret] Comparing between different RNN models')
     ###############################################
     # Input Parameters
     ###############################################
@@ -892,7 +892,7 @@ def ber_rnn_compare():
     plt.show()
 
 def ber_snr_range():
-    print '[Interpret] BER output of Stacked RNN/ Turbo Decoder'
+    print('[Interpret] BER output of Stacked RNN/ Turbo Decoder')
     ###############################################
     # Input Parameters
     ###############################################
@@ -920,7 +920,7 @@ def ber_snr_range():
 
 
 def ber_bursty_only_compare():
-    print '[Interpret] Comparing between different RNN models'
+    print('[Interpret] Comparing between different RNN models')
     ###############################################
     # Input Parameters
     ###############################################
@@ -990,7 +990,7 @@ def ber_bursty_only_compare():
     plt.show()
 
 def t_dist_for_paper():
-    print '[Interpret] Likelihood output for T-dist'
+    print('[Interpret] Likelihood output for T-dist')
     ###############################################
     # Input Parameters
     ###############################################
@@ -1046,7 +1046,7 @@ def t_dist_for_paper():
     plt.show()
 
 def t_ber_for_paper():
-    print '[Interpret] Comparing between different RNN models'
+    print('[Interpret] Comparing between different RNN models')
     ###############################################
     # Input Parameters
     ###############################################
@@ -1055,8 +1055,8 @@ def t_ber_for_paper():
     radar_bit_pos = 50
     num_block = 50000
 
-    print 'num_block', num_block
-    '1.18850222744'
+    print('num_block', num_block
+    '1.18850222744')
 
     interpret_2  = Interpret(network_saved_path=network_saved_path_2, block_len=100, num_block=num_block)
     map_ber_non_bursty_t, rnn_ber_non_bursty_t = interpret_2.ber(bit_pos_list=[radar_bit_pos], sigma=1.0,
@@ -1070,10 +1070,10 @@ def t_ber_for_paper():
                                                                               is_t=False)
 
 
-    print 'map_ber_non_bursty_t', map_ber_non_bursty_t
-    print 'rnn_ber_non_bursty_t', rnn_ber_non_bursty_t
-    print 'map_ber_non_bursty',map_ber_non_bursty
-    print 'rnn_ber_non_bursty',rnn_ber_non_bursty
+    print('map_ber_non_bursty_t', map_ber_non_bursty_t)
+    print('rnn_ber_non_bursty_t', rnn_ber_non_bursty_t)
+    print('map_ber_non_bursty',map_ber_non_bursty)
+    print('rnn_ber_non_bursty',rnn_ber_non_bursty)
 
     plt.figure(1)
     plt.title('Compare BER non bursty on T-dist and AWGN at -1.5dB')

@@ -188,16 +188,16 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
         network_saved_path = network_saved_path
 
     #rnn_type    = 'lstm'    #'gru', 'lstm'
-    print '[RNN Model] using model type', rnn_type
-    print '[RNN Model] using model path', network_saved_path
+    print('[RNN Model] using model type', rnn_type)
+    print('[RNN Model] using model path', network_saved_path)
     ######################################
     # Encode Turbo Code
     ######################################
     batch_size    = 32
 
-    print '[RNN Model] Block length', block_len
-    print '[RNN Model] Evaluate Batch size', batch_size
-    print '[RNN Model] Number of decoding layers', dec_iter_num
+    print('[RNN Model] Block length', block_len)
+    print('[RNN Model] Evaluate Batch size', batch_size)
+    print('[RNN Model] Number of decoding layers', dec_iter_num)
 
     def errors(y_true, y_pred):
         myOtherTensor = K.not_equal(y_true, K.round(y_pred))
@@ -240,7 +240,7 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
             f3 = SimpleRNN(name='simple_rnn_2', units=num_hidden_unit, activation='tanh', return_sequences=True, dropout=1.0)
             f4 = BatchNormalization(name='batch_normalization_2')
     else:
-        print '[RNN Model]RNN direction not supported, exit'
+        print('[RNN Model]RNN direction not supported, exit')
         import sys
         sys.exit()
 
@@ -289,7 +289,7 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
         elif num_layer == 1:
             x2_out = f5(f2(f1(x2)))
         else:
-            print 'other layer not supported!'
+            print('other layer not supported!')
             return
         x2_temp = lambda_concat([x2_out, x2])
         x2 = takell(x2_temp)
@@ -344,7 +344,7 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
     try:
         model.load_weights(network_saved_path, by_name=True)
     except:
-        print '[RNN Model][Warning]loading weight fails!'
+        print('[RNN Model][Warning]loading weight fails!')
 
     #print model.summary()
 

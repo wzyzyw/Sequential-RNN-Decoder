@@ -33,7 +33,7 @@ frac = 0.45
 
 config.gpu_options.per_process_gpu_memory_fraction = frac
 set_session(tf.Session(config=config))
-print '[Test][Warining] Restrict GPU memory usage to', frac, ', enable',str(int(1.0/frac)), 'processes'
+print('[Test][Warining] Restrict GPU memory usage to', frac, ', enable',str(int(1.0/frac)), 'processes')
 import matplotlib.pyplot as plt
 
 import numpy as np
@@ -75,9 +75,9 @@ def get_args():
     parser.add_argument('--GPU_proportion', type=float, default=1.00)
 
     args = parser.parse_args()
-    print args
+    print(args)
 
-    print '[ID]', args.id
+    print('[ID]', args.id)
     return args
 
 def build_encoder(args):
@@ -128,9 +128,9 @@ def train(args):
     model = build_encoder(args)
 
     if args.enc_weight == 'default':
-        print 'Encoder has no weight'
+        print('Encoder has no weight')
     else:
-        print 'Encoder loaded weight', args.Enc_weight
+        print('Encoder loaded weight', args.Enc_weight)
         model.load_weights(args.Enc_weight)
 
 
@@ -156,6 +156,6 @@ if __name__ == '__main__':
 
         config.gpu_options.per_process_gpu_memory_fraction = frac
         set_session(tf.Session(config=config))
-        print '[Test][Warining] Restrict GPU memory usage to 45%, enable',str(int(1/args.GPU_proportion)), 'processes'
+        print('[Test][Warining] Restrict GPU memory usage to 45%, enable',str(int(1/args.GPU_proportion)), 'processes')
 
     train(args)

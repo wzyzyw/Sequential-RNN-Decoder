@@ -56,9 +56,9 @@ tb_depth = 10#5*(M.sum() + 1)
 
 print('traceback depth: '+str(tb_depth))
 
-for idx in xrange(SNR_points):
+for idx in range(SNR_points):
     print(idx)
-    for iterations in xrange(iterations_number):  
+    for iterations in range(iterations_number):  
 
         message_bits = np.random.randint(0, 2, k)
 

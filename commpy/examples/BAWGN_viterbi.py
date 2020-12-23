@@ -12,14 +12,14 @@ from commpy.utilities import *
 
 # NType = 'periodic'
 NType = 'iid'
-print ('NType:', NType)
+print('NType:', NType)
 
 print(NType)
 iterations_number = 100
-print 'iterations_number: ', iterations_number
+print('iterations_number: ', iterations_number)
 
 k = 1000#0#000#00#0
-print 'k: ',k
+print('k: ',k)
 N = 2*(k+2)#00#0
 
 SNR_dB_start_Eb = 7
@@ -76,9 +76,9 @@ tb_depth = 10#5*(M.sum() + 1)
 
 print('traceback depth: '+str(tb_depth))
 
-for idx in xrange(SNR_points):
+for idx in range(SNR_points):
     print(idx)
-    for iterations in xrange(iterations_number):  
+    for iterations in range(iterations_number):  
 #        print iterations
         message_bits = np.random.randint(0, 2, k)
 
@@ -114,7 +114,7 @@ for idx in xrange(SNR_points):
             Tr_noise = np.zeros(coded_bits.shape)#test_sigmas[idx]*np.random.standard_normal([1,period])
             Tr_noise[0] = test_sigmas[idx]*np.random.standard_normal(1)
 
-            for iii in xrange(1,len(coded_bits)):
+            for iii in range(1,len(coded_bits)):
                 Tr_noise[iii]=alpha*Tr_noise[iii-1]+beta*test_sigmas[idx]*np.random.standard_normal(1)
             
             received = (2*coded_bits-1) + Tr_noise # Modulation plus noise
@@ -138,7 +138,7 @@ for idx in xrange(SNR_points):
 
         nb_errors[idx]+= num_bit_errors
         easy_ber[idx]+= num_easy_ber
-        print num_easy_ber
+        print(num_easy_ber)
 #        print num_bit_errors
         map_nb_errors[idx]+= map_num_bit_errors
 

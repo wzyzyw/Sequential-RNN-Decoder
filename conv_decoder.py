@@ -38,7 +38,7 @@ frac = 0.45
 
 config.gpu_options.per_process_gpu_memory_fraction = frac
 set_session(tf.Session(config=config))
-print '[Test][Warining] Restrict GPU memory usage to', frac, ', enable',str(int(1.0/frac)), 'processes'
+print('[Test][Warining] Restrict GPU memory usage to', frac, ', enable',str(int(1.0/frac)), 'processes')
 import matplotlib.pyplot as plt
 
 import numpy as np
@@ -106,9 +106,9 @@ def get_args():
 
 
     args = parser.parse_args()
-    print args
+    print(args)
 
-    print '[ID]', args.id
+    print('[ID]', args.id)
     return args
 
 def build_decoder(args):
@@ -117,10 +117,10 @@ def build_decoder(args):
     dropout_rate           = 1.0
 
     def channel(x):
-        print 'training with noise snr db', args.train_channel_low, args.train_channel_high
+        print('training with noise snr db', args.train_channel_low, args.train_channel_high)
         noise_sigma_low =  snr_db2sigma(args.train_channel_low) # 0dB
         noise_sigma_high =  snr_db2sigma(args.train_channel_high) # 0dB
-        print 'training with noise snr db', noise_sigma_low, noise_sigma_high
+        print('training with noise snr db', noise_sigma_low, noise_sigma_high)
         noise_sigma =  tf.random_uniform(tf.shape(x),
             minval=noise_sigma_high,
             maxval=noise_sigma_low,
@@ -164,16 +164,16 @@ def train(args):
     def scheduler(epoch):
 
         if epoch > 10 and epoch <=15:
-            print 'changing by /10 lr'
+            print('changing by /10 lr')
             lr = args.learning_rate/10.0
         elif epoch >15 and epoch <=20:
-            print 'changing by /100 lr'
+            print('changing by /100 lr')
             lr = args.learning_rate/100.0
         elif epoch >20 and epoch <=25:
-            print 'changing by /1000 lr'
+            print('changing by /1000 lr')
             lr = args.learning_rate/1000.0
         elif epoch > 25:
-            print 'changing by /10000 lr'
+            print('changing by /10000 lr')
             lr = args.learning_rate/10000.0
         else:
             lr = args.learning_rate
@@ -183,9 +183,9 @@ def train(args):
 
 
     if args.Dec_weight == 'default':
-        print 'Decoder has no weight'
+        print('Decoder has no weight')
     else:
-        print 'Decoder loaded weight', args.Dec_weight
+        print('Decoder loaded weight', args.Dec_weight)
         model.load_weights(args.Dec_weight)
 
 
@@ -223,7 +223,7 @@ def test(args, dec_weight):
     test_sigmas = np.array([np.sqrt(1/(2*10**(float(item)/float(10)))) for item in SNRS_dB_Es])
 
     SNRS = SNRS_dB
-    print '[testing]', SNRS_dB
+    print('[testing]', SNRS_dB)
 
     ber, bler = [],[]
     for idx, snr_db in enumerate(SNRS_dB):
@@ -279,9 +279,9 @@ def test(args, dec_weight):
 
         del model_test
 
-    print 'SNRS:', SNRS_dB
-    print 'BER:',ber
-    print 'BLER:',bler
+    print('SNRS:', SNRS_dB)
+    print('BER:',ber)
+    print('BLER:',bler)
 
 
 

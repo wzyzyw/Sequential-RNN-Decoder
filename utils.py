@@ -12,7 +12,7 @@ import commpy.channelcoding.turbo as turbo
 from scipy import stats
 import keras.backend as K
 import tensorflow as tf
-
+from noise import itsnoise
 #######################################
 # Interleaving Helper Functions
 #######################################
@@ -23,7 +23,7 @@ def deint(in_array, p_array):
     return out_array
 
 def intleave(in_array, p_array):
-    out_array = np.array(map(lambda x: in_array[x], p_array))
+    out_array = np.array(list(map(lambda x: in_array[x], p_array)))
     return out_array
 
 def direct_subtract(in1,in2):
@@ -115,10 +115,10 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
         #a = denoise_thd
         if denoise_thd == 10.0:
             a = denoise_thd_func() + 1
-            print a
+            print(a)
         else:
             a = denoise_thd
-            print a
+            print(a)
 
         if noise_type == 'hyeji_bursty+denoise' or noise_type == 'hyeji_bursty+denoise0':
             corrupted_signal  = stats.threshold(corrupted_signal, threshmin=-a, threshmax=a, newval=0.0)
@@ -170,9 +170,32 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
         this_snr = np.random.uniform(snr_mixture[2],snr_mixture[0], data_shape)
         noise = np.multiply(this_snr, np.random.standard_normal(data_shape)) # Define noise
         corrupted_signal = 2.0*input_signal-1.0 + noise
-
+    elif noise_type=="its":
+        # print("***its noise***")
+        sps=1
+        bandwidth=250e3
+        roll_off=0.25
+        baud_rate=bandwidth/(1+roll_off)
+        sample_rate=baud_rate/sps
+        sample_interval=1/sample_rate
+        params={
+            "sps":sps,
+            "bandwidth":bandwidth,
+            "roll_off":roll_off,
+            "baud_rate":baud_rate,
+            "sample_rate":sample_rate,
+            "sample_interval":sample_interval,
+            "Nr":2,
+        }
+        hnum=1
+        for dim in data_shape:
+            hnum=hnum*dim
+        noiseobj=itsnoise(params,hnum)
+        noise=noiseobj.getnoise(sigma**2,1/sigma**2)
+        noise=noise.reshape(data_shape)
+        corrupted_signal = 2.0*input_signal-1.0 + noise
     else:
-        print '[Warning][Noise Generator]noise_type noty specified!'
+        print('[Warning][Noise Generator]noise_type noty specified!')
         noise = sigma * np.random.standard_normal(data_shape)
         corrupted_signal = 2.0*input_signal-1.0 + noise
 
@@ -252,7 +275,7 @@ def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False
         TBD, noise model shall be open to other user, for them to train their own decoder.
         '''
 
-        print '[Debug] Customize noise model not supported yet'
+        print('[Debug] Customize noise model not supported yet')
     else:  # awgn
         pass
 
@@ -330,7 +353,7 @@ def get_test_sigmas(snr_start, snr_end, snr_points):
     test_sigmas = np.array([np.sqrt(1/(2*10**(float(item)/float(10)))) for item in SNRS_dB_Es])
 
     SNRS = SNRS_dB
-    print '[testing] SNR range in dB ', SNRS
+    print('[testing] SNR range in dB ', SNRS)
 
     return SNRS, test_sigmas
 

@@ -7,7 +7,7 @@ import time
 import logging
 import commpy.channelcoding.convcode as cc
 import commpy.channelcoding.interleavers as RandInterlv
-
+from log import Logger
 def get_args():
     import argparse
     parser = argparse.ArgumentParser()
@@ -35,7 +35,7 @@ def get_args():
 
     parser.add_argument('-batch_size',  type=int, default=10)
 
-    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty'], default='awgn')
+    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its'], default='awgn')
     parser.add_argument('-radar_power', type=float, default=20.0)
     parser.add_argument('-radar_prob', type=float, default=0.05)
 
@@ -44,8 +44,8 @@ def get_args():
     parser.add_argument('-id', type=str, default=str(np.random.random())[2:8])
 
     args = parser.parse_args()
-    print args
-    print '[ID]', args.id
+    print(args)
+    print('[ID]', args.id)
     return args
 
 
@@ -53,6 +53,8 @@ if __name__ == '__main__':
     ##################################################################################################################
     # Parse Arguments
     ##################################################################################################################
+    # log设置
+    sys.stdout=Logger("eval",sys.stdout)
     args = get_args()
 
     if args.GPU_proportion < 1.00:
@@ -62,9 +64,9 @@ if __name__ == '__main__':
 
         config.gpu_options.per_process_gpu_memory_fraction = frac
         set_session(tf.Session(config=config))
-        print '[Test][Warining] Restrict GPU memory usage to 45%, enable',str(int(1/args.GPU_proportion)), 'processes'
+        print('[Test][Warining] Restrict GPU memory usage to 45%, enable',str(int(1/args.GPU_proportion)), 'processes')
 
-    print '[Setting Parameters] Number of Block is ', args.num_block
+    print('[Setting Parameters] Number of Block is ', args.num_block)
 
     M = np.array([args.M])
     generator_matrix = np.array([[args.enc1,args.enc2]])
@@ -73,7 +75,7 @@ if __name__ == '__main__':
     trellis2 = cc.Trellis(M, generator_matrix,feedback=feedback)# Create trellis data structure
     interleaver = RandInterlv.RandInterlv(args.block_len, 0)
     p_array = interleaver.p_array
-    print '[Convolutional Code Codec] Encoder', 'M ', M, ' Generator Matrix ', generator_matrix, ' Feedback ', feedback
+    print('[Convolutional Code Codec] Encoder', 'M ', M, ' Generator Matrix ', generator_matrix, ' Feedback ', feedback)
     codec  = [trellis1, trellis2, interleaver]
 
     ##########################################
@@ -86,14 +88,14 @@ if __name__ == '__main__':
                        rnn_direction = args.rnn_direction,
                        interleave_array = p_array, dec_iter_num = args.num_dec_iteration, num_hidden_unit=args.num_hidden_unit)
     end_time = time.time()
-    print '[RNN decoder]loading RNN model takes ', str(end_time-start_time), ' secs'   # typically longer than 5 mins, since it is deep!
+    print('[RNN decoder]loading RNN model takes ', str(end_time-start_time), ' secs') # typically longer than 5 mins, since it is deep!
 
     SNRS, test_sigmas = get_test_sigmas(args.snr_test_start, args.snr_test_end, args.snr_points)
 
     turbo_res_ber = []
     turbo_res_bler= []
 
-    for idx in xrange(len(test_sigmas)):
+    for idx in range(len(test_sigmas)):
         start_time = time.time()
         noiser = [args.noise_type, test_sigmas[idx]]
         X_feed_test, X_message_test = build_rnn_data_feed(args.num_block, args.block_len, noiser, codec)
@@ -105,12 +107,12 @@ if __name__ == '__main__':
         tp0 = (abs(decoded_bits-X_message_test)).reshape([X_message_test.shape[0],X_message_test.shape[1]])
         bler_err_rate = sum(np.sum(tp0,axis=1)>0)*1.0/(X_message_test.shape[0])
 
-        print '[testing] This is SNR', SNRS[idx] , 'RNN BER ', ber_err_rate, 'RNN BLER', bler_err_rate
+        print('[testing] This is SNR', SNRS[idx] , 'RNN BER ', ber_err_rate, 'RNN BLER', bler_err_rate)
         turbo_res_ber.append(ber_err_rate)
         turbo_res_bler.append(bler_err_rate)
         end_time = time.time()
-        print '[testing] runnig time is', str(end_time-start_time)
+        print('[testing] runnig time is', str(end_time-start_time))
 
-    print '[Result Summary] SNRS is', SNRS
-    print '[Result Summary] Turbo RNN BER is', turbo_res_ber
-    print '[Result Summary] Turbo RNN BLER is', turbo_res_bler
+    print('[Result Summary] SNRS is', SNRS)
+    print('[Result Summary] Turbo RNN BER is', turbo_res_ber)
+    print('[Result Summary] Turbo RNN BLER is', turbo_res_bler)

@@ -64,12 +64,12 @@ nb_block_no_errors = np.zeros(test_sigmas.shape)
 
 tic = time.clock()
 
-for iterations in xrange(iterations_number):
+for iterations in range(iterations_number):
     print(iterations)
     message_bits = np.random.randint(0, 2, k)
     [sys, par1, par2] = turbo.turbo_encode(message_bits, trellis1, trellis2, interleaver)
 
-    for idx in xrange(len(test_sigmas)):
+    for idx in range(len(test_sigmas)):
                         
         if NType == 'iid':
             noise = test_sigmas[idx]*np.random.standard_normal(sys.shape) # Define noise

@@ -44,8 +44,8 @@ def get_args():
 
     args = parser.parse_args()
 
-    print args
-    print '[ID]', args.id
+    print(args)
+    print('[ID]', args.id)
     return args
 
 
@@ -61,11 +61,11 @@ if __name__ == '__main__':
     elif args.code_rate == 3:
         generator_matrix = np.array([[args.enc1, args.enc2, args.enc3]])
     else:
-        print 'Not supported!'
+        print('Not supported!')
         sys.exit()
     feedback = args.feedback
 
-    print '[testing] Convolutional Code Encoder: G: ', generator_matrix,'Feedback: ', feedback,  'M: ', M
+    print('[testing] Convolutional Code Encoder: G: ', generator_matrix,'Feedback: ', feedback,  'M: ', M)
 
     trellis1 = cc.Trellis(M, generator_matrix,feedback=feedback)  # Create trellis data structure
 
@@ -112,19 +112,19 @@ if __name__ == '__main__':
                 nb_block_no_errors[idx] = nb_block_no_errors[idx]+1
 
         nb_errors[idx]+= sum(results)
-        print '[testing]SNR: ' , SNRS[idx]
-        print '[testing]BER: ', sum(results)/float(args.block_len*args.num_block)
-        print '[testing]BLER: ', 1.0 - nb_block_no_errors[idx]/args.num_block
+        print('[testing]SNR: ' , SNRS[idx])
+        print('[testing]BER: ', sum(results)/float(args.block_len*args.num_block))
+        print('[testing]BLER: ', 1.0 - nb_block_no_errors[idx]/args.num_block
         commpy_res_ber.append(sum(results)/float(args.block_len*args.num_block))
         commpy_res_bler.append(1.0 - nb_block_no_errors[idx]/args.num_block)
-        end_time = time.time()
-        print '[testing] This SNR runnig time is', str(end_time-start_time)
+        end_time = time.time())
+        print('[testing] This SNR runnig time is', str(end_time-start_time))
 
 
-    print '[Result]SNR: ', SNRS
-    print '[Result]BER', commpy_res_ber
-    print '[Result]BLER', commpy_res_bler
+    print('[Result]SNR: ', SNRS)
+    print('[Result]BER', commpy_res_ber)
+    print('[Result]BLER', commpy_res_bler)
 
     toc = time.time()
 
-    print '[Result]Total Running time:', toc-tic
+    print('[Result]Total Running time:', toc-tic)

@@ -34,8 +34,8 @@ def hinton(W, maxweight=None):
 
     plt.axis('off')
     plt.axis('equal')
-    for x in xrange(width):
-        for y in xrange(height):
+    for x in range(width):
+        for y in range(height):
             _x = x+1
             _y = y+1
             w = W[y, x]
@@ -65,23 +65,23 @@ def level1():
     bias_matrix   = file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1']['bias:0'][:]
     recur_matrix = file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1']['recurrent_kernel:0'][:, :]
     kernel_matrix = file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1']['kernel:0'][:, :]
-    print file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1']['recurrent_kernel:0']
-    print file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1']['kernel:0']
+    print(file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1']['recurrent_kernel:0'])
+    print(file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1']['kernel:0'])
 
     b2_input    = bias_matrix[ :200].T
     b2_forget   = bias_matrix[ 200:400].T
     b2_mem_cell = bias_matrix[ 400:600].T
     b2_output   = bias_matrix[ 600:].T
 
-    print 'Mean of Bias Layer'
-    print np.mean(b2_input)
-    print np.mean(b2_forget)
-    print np.mean(b2_mem_cell)
-    print np.mean(b2_output)
-    print np.mean(abs(b2_input))
-    print np.mean(abs(b2_forget))
-    print np.mean(abs(b2_mem_cell))
-    print np.mean(abs(b2_output))
+    print('Mean of Bias Layer')
+    print(np.mean(b2_input))
+    print(np.mean(b2_forget))
+    print(np.mean(b2_mem_cell))
+    print(np.mean(b2_output))
+    print(np.mean(abs(b2_input)))
+    print(np.mean(abs(b2_forget)))
+    print(np.mean(abs(b2_mem_cell)))
+    print(np.mean(abs(b2_output)))
 
     k2_input    = kernel_matrix[:, :200]
     k2_forget   = kernel_matrix[:, 200:400]
@@ -94,32 +94,32 @@ def level1():
     r2_output   = recur_matrix[:, 600:]
 
     from numpy import linalg as LA
-    print 'Kernel Matrix Eigen Values, max/mean'
+    print('Kernel Matrix Eigen Values, max/mean')
     w, v = LA.eig(np.dot(k2_input, k2_input.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(k2_forget, k2_forget.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(k2_mem_cell, k2_mem_cell.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(k2_output, k2_output.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
-    print 'Recurrent Matrix Eigen Values, max/mean'
+    print('Recurrent Matrix Eigen Values, max/mean')
     w, v = LA.eig(np.dot(r2_input, r2_input.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(r2_forget,r2_forget.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
 
     w, v = LA.eig(np.dot(r2_mem_cell, r2_mem_cell.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(r2_output, r2_output.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
 def level2():
     import h5py
@@ -128,9 +128,9 @@ def level2():
     #hdf5_file_name = './model_zoo/tdist_v3_model_end2end/tdist_end2end_ttbl_0.440818870589_snr_9.h5'
     file    = h5py.File(hdf5_file_name, 'r')
 
-    print 'running on layer 2'
+    print('running on layer 2')
 
-    print file['bidirectional_2']['bidirectional_2']['forward_bidirectional_2'].keys()
+    print(file['bidirectional_2']['bidirectional_2']['forward_bidirectional_2'].keys())
 
     bias_matrix   = file['bidirectional_2']['bidirectional_2']['forward_bidirectional_2']['bias:0'][:]
     recur_matrix  = file['bidirectional_2']['bidirectional_2']['forward_bidirectional_2']['recurrent_kernel:0'][:, :]
@@ -147,11 +147,11 @@ def level2():
     b2_mem_cell = bias_matrix[ 400:600].T
     b2_output   = bias_matrix[ 600:].T
 
-    print 'Mean of Bias Layer'
-    print np.mean(b2_input)
-    print np.mean(b2_forget)
-    print np.mean(b2_mem_cell)
-    print np.mean(b2_output)
+    print('Mean of Bias Layer')
+    print(np.mean(b2_input))
+    print(np.mean(b2_forget))
+    print(np.mean(b2_mem_cell))
+    print(np.mean(b2_output))
 
     k2_input    = kernel_matrix[:, :200].T
     k2_forget   = kernel_matrix[:, 200:400].T
@@ -164,32 +164,32 @@ def level2():
     r2_output   = recur_matrix[:, 600:]
 
     from numpy import linalg as LA
-    print 'Kernel Matrix Eigen Values, max/mean'
+    print('Kernel Matrix Eigen Values, max/mean')
     w, v = LA.eig(np.dot(k2_input, k2_input.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(k2_forget, k2_forget.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(k2_mem_cell, k2_mem_cell.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(k2_output, k2_output.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
-    print 'Recurrent Matrix Eigen Values, max/mean'
+    print('Recurrent Matrix Eigen Values, max/mean')
     w, v = LA.eig(np.dot(r2_input, r2_input.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(r2_forget,r2_forget.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
 
     w, v = LA.eig(np.dot(r2_mem_cell, r2_mem_cell.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
     w, v = LA.eig(np.dot(r2_output, r2_output.T))
-    print max(w), np.mean(w)
+    print(max(w), np.mean(w))
 
 
     # print np.mean(r2_input), np.mean(r2_forget),np.mean(r2_mem_cell),np.mean(r2_output)
@@ -207,11 +207,11 @@ if __name__ == "__main__":
     hdf5_file_name = './model_zoo/bcjr_train_0925/bcjr_traindefault_200_simple-rnn_sd_1000.570911494253_2.h5'
     file    = h5py.File(hdf5_file_name, 'r')
 
-    print 'running on layer 2'
+    print('running on layer 2')
 
-    print file.keys()
+    print(file.keys())
 
-    print file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1'].keys()
+    print(file['bidirectional_1']['bidirectional_1']['forward_bidirectional_1'].keys())
 
     bias_matrix   = file['bidirectional_2']['bidirectional_2']['forward_bidirectional_2']['bias:0'][:]
     recur_matrix  = file['bidirectional_2']['bidirectional_2']['forward_bidirectional_2']['recurrent_kernel:0'][:, :]

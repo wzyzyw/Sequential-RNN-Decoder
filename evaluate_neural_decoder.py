@@ -21,7 +21,7 @@ frac = 0.45
 config.gpu_options.per_process_gpu_memory_fraction = frac
 set_session(tf.Session(config=config))
 
-print '[Test][Warining] Restrict GPU memory usage to 45%, enable',str(int(1/0.45)), 'processes'
+print('[Test][Warining] Restrict GPU memory usage to 45%, enable',str(int(1/0.45)), 'processes')
 
 
 def get_args():
@@ -62,7 +62,7 @@ def get_args():
 
     args = parser.parse_args()
 
-    print '[ID]', args.id
+    print('[ID]', args.id)
     return args
 
 
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     trellis2 = cc.Trellis(M, generator_matrix,feedback=feedback)# Create trellis data structure
     interleaver = RandInterlv.RandInterlv(args.block_len, 0)
     p_array = interleaver.p_array
-    print '[BCJR Example Codec] Encoder', 'M ', M, ' Generator Matrix ', generator_matrix, ' Feedback ', feedback
+    print('[BCJR Example Codec] Encoder', 'M ', M, ' Generator Matrix ', generator_matrix, ' Feedback ', feedback)
     codec  = [trellis1, trellis2, interleaver]
 
     ##########################################
@@ -107,7 +107,7 @@ if __name__ == '__main__':
         add_sys = False
         last_layer_sigmoid = True
 
-    print '[helper] add sys ', add_sys, 'last layer sigmoid ', last_layer_sigmoid
+    print('[helper] add sys ', add_sys, 'last layer sigmoid ', last_layer_sigmoid)
 
     ##########################################
     # Setting Up RNN Model
@@ -119,7 +119,7 @@ if __name__ == '__main__':
                        last_layer_sigmoid = last_layer_sigmoid,
                        interleave_array = p_array, dec_iter_num = dec_iter_num, num_hidden_unit=num_hidden_unit)
     end_time = time.time()
-    print '[RNN decoder]loading RNN model takes ', str(end_time-start_time), ' secs'   # typically longer than 5 mins, since it is deep!
+    print('[RNN decoder]loading RNN model takes ', str(end_time-start_time), ' secs')   # typically longer than 5 mins, since it is deep!
 
     ##########################################
     # Setting Up Channel & SNR range
@@ -134,12 +134,12 @@ if __name__ == '__main__':
     test_sigmas = np.array([np.sqrt(1/(2*10**(float(item)/float(10)))) for item in SNRS_dB_Es])
 
     SNRS = SNRS_dB
-    print '[testing] SNR range in dB ', SNRS
+    print('[testing] SNR range in dB ', SNRS)
 
     turbo_res_ber = []
     turbo_res_bler= []
 
-    for idx in xrange(SNR_points):
+    for idx in range(SNR_points):
         start_time = time.time()
         noiser = [noise_type, test_sigmas[idx], vv, radar_power, radar_prob, denoise_thd, snr_mix]
 
@@ -152,7 +152,7 @@ if __name__ == '__main__':
             if last_layer_sigmoid == False:
                 decoded_bits = (pd + weighted_sys > 0)
             else:
-                print 'not supported, halt!'
+                print('not supported, halt!')
                 sys.exit()
         else:
             decoded_bits = np.round(pd)
@@ -163,12 +163,12 @@ if __name__ == '__main__':
         tp0 = (abs(decoded_bits-X_message_test)).reshape([X_message_test.shape[0],X_message_test.shape[1]])
         bler_err_rate = sum(np.sum(tp0,axis=1)>0)*1.0/(X_message_test.shape[0])
 
-        print '[testing] This is SNR', SNRS[idx] , 'RNN BER ', ber_err_rate, 'RNN BLER', bler_err_rate
+        print('[testing] This is SNR', SNRS[idx] , 'RNN BER ', ber_err_rate, 'RNN BLER', bler_err_rate)
         turbo_res_ber.append(ber_err_rate)
         turbo_res_bler.append(bler_err_rate)
         end_time = time.time()
-        print '[testing] runnig time is', str(end_time-start_time)
+        print('[testing] runnig time is', str(end_time-start_time))
 
-    print '[Result Summary] SNRS is', SNRS
-    print '[Result Summary] Turbo RNN BER is', turbo_res_ber
-    print '[Result Summary] Turbo RNN BLER is', turbo_res_bler
+    print('[Result Summary] SNRS is', SNRS)
+    print('[Result Summary] Turbo RNN BER is', turbo_res_ber)
+    print('[Result Summary] Turbo RNN BLER is', turbo_res_bler)
