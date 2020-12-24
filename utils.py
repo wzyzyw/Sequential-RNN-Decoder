@@ -30,7 +30,36 @@ def direct_subtract(in1,in2):
     out = in1
     out[:,:,2] = in1[:,:,2] - in2
     return out
-
+# get its noise
+def getits(num_block):
+    sps=1
+    bandwidth=250e3
+    roll_off=0.25
+    baud_rate=bandwidth/(1+roll_off)
+    sample_rate=baud_rate/sps
+    sample_interval=1/sample_rate
+    params={
+        "sps":sps,
+        "bandwidth":bandwidth,
+        "roll_off":roll_off,
+        "baud_rate":baud_rate,
+        "sample_rate":sample_rate,
+        "sample_interval":sample_interval,
+        "Nr":2,
+    }
+    # currently, the number of its noise is denpent to the number of data blocks
+    hnum=num_block
+    itsobj=itsnoise(params,hnum)
+    its=itsobj.getits()
+    return its
+def additsnoise(noise,sys_r,par1_r,par2_r):
+    if noise is None:
+        raise Exception("need its noise but not generate noise")
+    else:
+        sys_r=sys_r+noise*np.ones(sys_r.shape)
+        par1_r=par1_r+noise*np.ones(par1_r.shape)
+        par2_r=par2_r+noise*np.ones(par2_r.shape)
+    return (sys_r,par1_r,par2_r)
 #######################################
 # Noise Helper Function
 #######################################
@@ -54,7 +83,7 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
 
     data_shape = input_signal.shape  # input_signal has to be a numpy array.
 
-    if noise_type == 'awgn':
+    if noise_type in ['awgn','its']:
         noise = sigma * np.random.standard_normal(data_shape) # Define noise
         corrupted_signal = 2.0*input_signal-1.0 + noise
 
@@ -170,30 +199,6 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
         this_snr = np.random.uniform(snr_mixture[2],snr_mixture[0], data_shape)
         noise = np.multiply(this_snr, np.random.standard_normal(data_shape)) # Define noise
         corrupted_signal = 2.0*input_signal-1.0 + noise
-    elif noise_type=="its":
-        # print("***its noise***")
-        sps=1
-        bandwidth=250e3
-        roll_off=0.25
-        baud_rate=bandwidth/(1+roll_off)
-        sample_rate=baud_rate/sps
-        sample_interval=1/sample_rate
-        params={
-            "sps":sps,
-            "bandwidth":bandwidth,
-            "roll_off":roll_off,
-            "baud_rate":baud_rate,
-            "sample_rate":sample_rate,
-            "sample_interval":sample_interval,
-            "Nr":2,
-        }
-        hnum=1
-        for dim in data_shape:
-            hnum=hnum*dim
-        noiseobj=itsnoise(params,hnum)
-        noise=noiseobj.getnoise(sigma**2,1/sigma**2)
-        noise=noise.reshape(data_shape)
-        corrupted_signal = 2.0*input_signal-1.0 + noise
     else:
         print('[Warning][Noise Generator]noise_type noty specified!')
         noise = sigma * np.random.standard_normal(data_shape)
@@ -202,41 +207,11 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
     return corrupted_signal
 
 
-# deprecated
-def generate_noise(noise_type, sigma, data_shape, vv =5.0, radar_power = 20.0, radar_prob = 5e-2):
-    '''
-    Documentation TBD.
-    :param noise_type: required, choose from 'awgn', 't-dist'
-    :param sigma:
-    :param data_shape:
-    :param vv: parameter for t-distribution.
-    :param radar_power:
-    :param radar_prob:
-    :return:
-    '''
-    if noise_type == 'awgn':
-        noise = sigma * np.random.standard_normal(data_shape) # Define noise
-
-    elif noise_type == 't-dist':
-        noise = sigma * math.sqrt((vv-2)/vv) *np.random.standard_t(vv, size = data_shape)
-
-    elif noise_type == 'awgn+radar':
-        noise = sigma * np.random.standard_normal(data_shape) + \
-                np.random.normal(radar_power, 1.0,size = data_shape ) * np.random.choice([-1.0, 0.0, 1.0], data_shape, p=[radar_prob/2, 1 - radar_prob, radar_prob/2])
-
-    elif noise_type == 'radar':
-        noise = np.random.normal(radar_power, 1.0,size = data_shape ) * np.random.choice([-1.0, 0.0, 1.0], data_shape, p=[radar_prob/2, 1 - radar_prob, radar_prob/2])
-
-    else:
-        noise = sigma * np.random.standard_normal(data_shape)
-
-    return noise
-
 #######################################
 # Build RNN Feed Helper Function (for Turbo Code only, need to refactor)
 #######################################
 
-def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False ,is_same_code = False, **kwargs):
+def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False ,is_same_code = False,its=None, **kwargs):
     '''
 
     :param num_block:
@@ -246,7 +221,6 @@ def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False
     :param kwargs:
     :return: X_feed, X_message
     '''
-
     # Unpack Noiser
     noise_type  = noiser[0]
     noise_sigma = noiser[1]
@@ -276,6 +250,9 @@ def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False
         '''
 
         print('[Debug] Customize noise model not supported yet')
+    elif noise_type=='its':
+        if its is None:
+            its=getits(num_block)
     else:  # awgn
         pass
 
@@ -304,7 +281,9 @@ def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False
                 message_bits = np.random.randint(0, 1, block_len)
 
         X_message.append(message_bits)
+        
         [sys, par1, par2] = turbo.turbo_encode(message_bits, trellis1, trellis2, interleaver)
+        # currently,channel encode bits are member of a data block. All member of each data block are added the same its noise and added different gaussion noise.
 
         sys_r  = corrupt_signal(sys, noise_type =noise_type, sigma = noise_sigma,
                                vv =vv, radar_power = radar_power, radar_prob = radar_prob, denoise_thd = denoise_thd,
@@ -315,7 +294,8 @@ def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False
         par2_r = corrupt_signal(par2, noise_type =noise_type, sigma = noise_sigma,
                                vv =vv, radar_power = radar_power, radar_prob = radar_prob, denoise_thd = denoise_thd,
                                snr_mixture = snr_mix)
-
+        if noise_type=='its':
+            sys_r,par1_r,par2_r=additsnoise(its[nbb],sys_r,par1_r,par2_r)
         rnn_feed_raw = np.stack([sys_r, par1_r, np.zeros(sys_r.shape), intleave(sys_r, p_array), par2_r], axis = 0).T
         rnn_feed = rnn_feed_raw
 

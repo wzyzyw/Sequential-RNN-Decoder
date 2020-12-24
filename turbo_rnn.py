@@ -11,7 +11,7 @@ from keras.layers.core import Lambda
 from keras.layers import TimeDistributed
 from keras.layers import LSTM, GRU, SimpleRNN
 from keras.layers.wrappers import  Bidirectional
-
+import sys
 from keras import backend as K
 from keras.engine import Layer
 
@@ -345,7 +345,7 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
         model.load_weights(network_saved_path, by_name=True)
     except:
         print('[RNN Model][Warning]loading weight fails!')
-
+        sys.exit(0)
     #print model.summary()
 
     layer_from = model.get_layer('time_distributed_1')

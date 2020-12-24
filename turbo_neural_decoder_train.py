@@ -1,5 +1,5 @@
 
-from utils import build_rnn_data_feed
+from utils import build_rnn_data_feed,getits
 from turbo_rnn import load_model
 
 import sys
@@ -16,7 +16,7 @@ from log import Logger
 def get_args():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-num_block_train', type=int, default=100)
+    parser.add_argument('-num_block_train', type=int, default=10000)
     parser.add_argument('-num_block_test', type=int, default=100)
     parser.add_argument('-block_len', type=int, default=100)
     parser.add_argument('-num_dec_iteration', type=int, default=6)
@@ -35,10 +35,10 @@ def get_args():
 
     parser.add_argument('-batch_size',  type=int, default=10)
     parser.add_argument('-learning_rate',  type=float, default=0.001)
-    parser.add_argument('-num_epoch',  type=int, default=20)
+    parser.add_argument('-num_epoch',  type=int, default=100)
 
-    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its'], default='awgn')
-    parser.add_argument('-train_snr', type=float, default=-1.0)
+    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its'], default='its')
+    parser.add_argument('-train_snr', type=float, default=-2.0)
     parser.add_argument('-train_loss', choices = ['binary_crossentropy', 'mse', 'mae'], default='binary_crossentropy')
 
     parser.add_argument('-radar_power', type=float, default=20.0)
@@ -54,7 +54,7 @@ def get_args():
     return args
 
 if __name__ == '__main__':
-    # log打印设置
+    # log setting
     sys.stdout=Logger("train",sys.stdout)
     args = get_args()
 

@@ -7,11 +7,16 @@ import os
 class Cnoise():
     def __init__(self,hnum):
         self._samples=hnum
-    def getnoise(self,npower,snr):
-        pass
-        return x
-    def gaussion(self,npower):
-        row,col=self._samples,1
+    
+    def noisepower(self,x,snr):
+        # sigpower=np.sum(np.abs(x)**2,axis=(0,1))/(x.shape[0]*x.shape[1])
+        
+        sigpower=np.sum(x**2)/(x.shape[0]*x.shape[1])
+        snr=10**(snr/10)
+        npower=sigpower/snr
+        return npower
+    def gaussion(self,x,npower):
+        row,col=x.shape
         # snr = 10 ** (snr / 10.0)
         # xpower = np.sum(x ** 2) / len(x)
         # npower = xpower / snr
@@ -23,13 +28,14 @@ class gaussionnoise(Cnoise):
     def __init__(self,hnum):
         super().__init__(hnum)
         print("gaussion noise generate")
-    def getnoise(self,npower,snr):
-        noise=self.gaussion(npower)
+    def getawgn(self,x,snr):
+        npower=self.noisepower(x,snr)
+        noise=self.gaussion(x,npower)
         return noise
 class itsnoise(Cnoise):
     def __init__(self,config,hnum):
         super().__init__(hnum)
-        # print("its noise generate")
+        print("its noise generate")
         self._daqizaoshengfile0="data/noise/daqizaosheng0.json"
         self._daqizaoshengfile1="data/noise/daqizaosheng1.json"
         self._count=0
@@ -38,7 +44,7 @@ class itsnoise(Cnoise):
         self._noiseconfig={
             "carrierfreq":13.86e6,
             "lpbw":config["bandwidth"],
-            "theta_zg":4.5,
+            "theta_zg":2.4,
             "gamma_zg":0.2,
             "Ni":40,
             "theta_mg":1.2,
@@ -57,7 +63,7 @@ class itsnoise(Cnoise):
             "z3_aj":1.49,
             "sample_interval":config["sample_interval"],
         }
-        # print("channel noise config",self._noiseconfig)
+        print("channel noise config",self._noiseconfig)
         self._allsnrdz=[]
         # if not os.path.exists(self._daqizaoshengfile0):
         #     self.daqizaoshengsave(self._daqizaoshengfile0)
@@ -76,7 +82,7 @@ class itsnoise(Cnoise):
     def hall3(self,li,z1,z2,z3):
         res=-1*z1/(z2*z3)-1/z3*np.log(1-li)+1/z2*lambertw(z1/z3*np.exp((z1+z2*np.log(1-li))/z3))
         return res
-    def zhaidaiganrao(self,npower):
+    def zhaidaiganrao(self):
         # gamma_zg=np.sqrt(0.5*(-npower+np.sqrt(npower**2+4*(self._noiseconfig["theta_zg"]-1)/(self._noiseconfig["theta_zg"]+1))))
         # print("gamma_zg=",gamma_zg,"npower=",npower)
         gamma_zg=self._noiseconfig["gamma_zg"]
@@ -93,7 +99,7 @@ class itsnoise(Cnoise):
                 zg[index,0]=0
         return zg
     
-    def maichongganrao(self,npower):
+    def maichongganrao(self):
         mg=np.zeros((self._samples,1))+1j*np.zeros((self._samples,1))
         # gamma_mg=np.sqrt(0.5*(-npower+np.sqrt(npower**2+4*(self._noiseconfig["theta_mg"]-1)/(self._noiseconfig["theta_mg"]+1))))
         # print("gamma_mg=",gamma_mg,"npower=",npower)
@@ -159,21 +165,25 @@ class itsnoise(Cnoise):
             json.dump(dzm_dic,f,ensure_ascii=False,indent=2)
         
 
-    def getnoise(self,npower,snr):
+    def getits(self):
+        # npower=self.noisepower(x,snr)
         # print("***get its noise***")
-        zg=self.zhaidaiganrao(npower)
-        mg=self.maichongganrao(npower)
+        zg=self.zhaidaiganrao()
+        mg=self.maichongganrao()
         # dz=self.daqizaosheng(snr,self._count)
-        # self._count=(self._count+1)%self._Nr #用来区分是第一个接收机
+        self._count=(self._count+1)%self._Nr #用来区分是第一个接收机
         # plt.figure(1)
         # plt.plot(self._timeseq,np.imag(zg))
         # plt.figure(2)
         # plt.plot(self._timeseq,np.imag(mg))
-        # plt.figure(3)
-        # plt.plot(self._timeseq,np.imag(dz))
+        # # plt.figure(3)
+        # # plt.plot(self._timeseq,np.imag(dz))
         # plt.show()
-        gauNoise=self.gaussion(npower)
-        return gauNoise+zg+mg
+        return zg+mg
+    def getawgn(self,x,snr):
+        npower=self.noisepower(x,snr)
+        noise=self.gaussion(x,npower)
+        return noise
     
 if __name__ == "__main__":
     sps=1
@@ -191,18 +201,17 @@ if __name__ == "__main__":
         "sample_interval":sample_interval,
         "Nr":2
     }
-    hnum=1000
+    hnum=10000
     noise=itsnoise(params,hnum)
-    x=np.random.randint(0,2,(1000,1))
+    x=np.random.randint(0,2,(hnum,1))
     xpower = np.sum(x ** 2) / len(x)
-    for i in range(1000):
+    for i in range(hnum):
         if x[i,0]==0:
             x[i,0]=-1
     snrlist=[i for i in range(-10,31,2)]
     for snr in snrlist:
-        snr = 10 ** (snr / 10.0) 
-        npower= xpower/snr
-        x=noise.getnoise(npower,snr)
+        a=noise.getits()
+        x=noise.getawgn(x,snr)
 
 
             

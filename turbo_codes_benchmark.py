@@ -2,7 +2,7 @@ __author__ = 'yihanjiang'
 '''
 Evaluate
 '''
-from utils import  corrupt_signal, snr_db2sigma, get_test_sigmas
+from utils import  corrupt_signal, snr_db2sigma, get_test_sigmas,getits,additsnoise
 
 import numpy as np
 import time
@@ -25,7 +25,7 @@ def get_args():
     parser.add_argument('-block_len', type=int, default=100)
     parser.add_argument('-num_dec_iteration', type=int, default=6)
 
-    parser.add_argument('-code_rate',  type=int, default=3)
+    parser.add_argument('-code_rate',  type=int, default=5)
 
     parser.add_argument('-M',  type=int, default=3)
     parser.add_argument('-enc1',  type=int, default=7)
@@ -52,7 +52,7 @@ def get_args():
 
 
 if __name__ == '__main__':
-    # log 设置
+    # log setting
     sys.stdout=Logger("benchmark",sys.stdout)
     args = get_args()
 
@@ -71,7 +71,8 @@ if __name__ == '__main__':
     turbo_res_ber, turbo_res_bler= [], []
 
     tic = time.time()
-
+    if args.noise_type=="its":
+        its=getits(args.num_block)
     def turbo_compute(idx,x):# x没有使用到
         '''
         Compute Turbo Decoding in 1 iterations for one SNR point.
@@ -83,10 +84,11 @@ if __name__ == '__main__':
         sys_r  = corrupt_signal(sys, noise_type = args.noise_type, sigma = test_sigmas[idx])
         par1_r = corrupt_signal(par1, noise_type = args.noise_type, sigma = test_sigmas[idx])
         par2_r = corrupt_signal(par2, noise_type = args.noise_type, sigma = test_sigmas[idx])
-
-        decoded_bits = turbo.hazzys_turbo_decode(sys_r, par1_r, par2_r, trellis1,
+        if args.noise_type=='its':
+            sys_r,par1_r,par2_r=additsnoise(its[x],sys_r,par1_r,par2_r)
+        decoded_bits = turbo.hazzys_g_turbo_decode(sys_r, par1_r, par2_r, trellis1,
                                                  test_sigmas[idx]**2, args.num_dec_iteration , interleaver, L_int = None)
-
+       
         num_bit_errors = hamming_dist(message_bits, decoded_bits)
 
         return num_bit_errors
@@ -99,6 +101,8 @@ if __name__ == '__main__':
     map_nb_errors = np.zeros(test_sigmas.shape)
     nb_block_no_errors = np.zeros(test_sigmas.shape)
 
+    # currently,its is independent to snr
+    
     for idx in range(len(test_sigmas)):
         start_time = time.time()
 

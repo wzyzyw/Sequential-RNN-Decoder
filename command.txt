@@ -6,3 +6,6 @@
 （3）python turbo_neural_decoder_eval.py -num_block 100 -block_len 100 -snr_test_start -10 -snr_test_end 30.0 -snr_points 21 -model_path ./tmp/weights_438855.h5 -noise_type its
 传统方法
 （1）python turbo_codes_benchmark.py -num_block 1000 -block_len 100 -snr_test_start -10 -snr_test_end 30.0 -snr_points 21 -num_cpu 1
+
+使用GPU
+--GPU_proportion 0.8
