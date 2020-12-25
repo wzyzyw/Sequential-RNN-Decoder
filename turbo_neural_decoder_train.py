@@ -119,13 +119,13 @@ if __name__ == '__main__':
     model.save_weights(save_path)
     print('[Warning] Save every epoch', './tmp/weights_' + args.id+ '.h5')
 
-
+    # 记录中间过程
     save_cb = keras.callbacks.ModelCheckpoint('./tmp/save'+args.id+ '_{epoch:02d}-{val_loss:.2f}' +'.h5', monitor='val_loss', verbose=0,
-                                              save_best_only=False, save_weights_only=True, mode='auto', period=1)
+                                              save_best_only=False, save_weights_only=True, mode='auto', period=10)
 
-
+ 
     model.fit(x=X_feed_train, y=X_message_train, batch_size=args.batch_size,
-              epochs=args.num_epoch, validation_data=(X_feed_test, X_message_test))  # starts training
+              epochs=args.num_epoch, validation_data=(X_feed_test, X_message_test),callbacks=save_cb)  # starts training
 
 
     print('[Training] saved model in ', save_path)
