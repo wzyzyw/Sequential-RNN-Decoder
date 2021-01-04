@@ -1,0 +1,59 @@
+Namespace(GPU_proportion=0.8, M=2, batch_size=10, block_len=178, enc1=7, enc2=7, feedback=7, fixed_var=0.0, id='157293', model_path='./tmp/weights_30-0.28.h5', noise_type='its', num_block=100, num_dec_iteration=6, num_hidden_unit=200, num_layer=2, radar_power=20.0, radar_prob=0.05, rnn_direction='bd', rnn_type='lstm', snr_points=21, snr_test_end=30.0, snr_test_start=-10.0)
+[ID] 157293
+[Test][Warining] Restrict GPU memory usage to 45%, enable 1 processes
+[Setting Parameters] Number of Block is  100
+[Convolutional Code Codec] Encoder M  [2]  Generator Matrix  [[7 7]]  Feedback  7
+[RNN Model] using model type lstm
+[RNN Model] using model path ./tmp/weights_30-0.28.h5
+[RNN Model] Block length 178
+[RNN Model] Evaluate Batch size 32
+[RNN Model] Number of decoding layers 6
+[RNN decoder]loading RNN model takes  16.063051223754883  secs
+[testing] SNR range in dB  [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0]
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.2, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR -10.0 RNN BER  0.4052247191011236 RNN BLER 1.0
+[testing] runnig time is 16.555733680725098
+[testing] This is SNR -8.0 RNN BER  0.3791573033707865 RNN BLER 1.0
+[testing] runnig time is 10.557771444320679
+[testing] This is SNR -6.0 RNN BER  0.3484831460674157 RNN BLER 1.0
+[testing] runnig time is 11.85530138015747
+[testing] This is SNR -4.0 RNN BER  0.30825842696629213 RNN BLER 1.0
+[testing] runnig time is 13.129894018173218
+[testing] This is SNR -2.0 RNN BER  0.2683707865168539 RNN BLER 1.0
+[testing] runnig time is 10.565748691558838
+[testing] This is SNR 0.0 RNN BER  0.21308988764044945 RNN BLER 1.0
+[testing] runnig time is 12.318064451217651
+[testing] This is SNR 2.0 RNN BER  0.1648314606741573 RNN BLER 1.0
+[testing] runnig time is 11.44140887260437
+[testing] This is SNR 4.0 RNN BER  0.11842696629213482 RNN BLER 1.0
+[testing] runnig time is 10.579712867736816
+[testing] This is SNR 6.0 RNN BER  0.07966292134831461 RNN BLER 1.0
+[testing] runnig time is 10.551787614822388
+[testing] This is SNR 8.0 RNN BER  0.06241573033707865 RNN BLER 1.0
+[testing] runnig time is 11.8134126663208
+[testing] This is SNR 10.0 RNN BER  0.036629213483146066 RNN BLER 0.98
+[testing] runnig time is 11.819399118423462
+[testing] This is SNR 12.0 RNN BER  0.03056179775280899 RNN BLER 0.98
+[testing] runnig time is 11.901180028915405
+[testing] This is SNR 14.0 RNN BER  0.02297752808988764 RNN BLER 0.91
+[testing] runnig time is 11.422459602355957
+[testing] This is SNR 16.0 RNN BER  0.01741573033707865 RNN BLER 0.89
+[testing] runnig time is 10.514885187149048
+[testing] This is SNR 18.0 RNN BER  0.020112359550561797 RNN BLER 0.89
+[testing] runnig time is 11.42545199394226
+[testing] This is SNR 20.0 RNN BER  0.01348314606741573 RNN BLER 0.83
+[testing] runnig time is 10.741279602050781
+[testing] This is SNR 22.0 RNN BER  0.015786516853932585 RNN BLER 0.87
+[testing] runnig time is 10.569772481918335
+[testing] This is SNR 24.0 RNN BER  0.014269662921348314 RNN BLER 0.84
+[testing] runnig time is 10.50986647605896
+[testing] This is SNR 26.0 RNN BER  0.01747191011235955 RNN BLER 0.86
+[testing] runnig time is 10.514884948730469
+[testing] This is SNR 28.0 RNN BER  0.016853932584269662 RNN BLER 0.83
+[testing] runnig time is 11.93309473991394
+[testing] This is SNR 30.0 RNN BER  0.013539325842696629 RNN BLER 0.83
+[testing] runnig time is 11.868267297744751
+[Result Summary] SNRS is [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0]
+[Result Summary] Turbo RNN BER is [0.4052247191011236, 0.3791573033707865, 0.3484831460674157, 0.30825842696629213, 0.2683707865168539, 0.21308988764044945, 0.1648314606741573, 0.11842696629213482, 0.07966292134831461, 0.06241573033707865, 0.036629213483146066, 0.03056179775280899, 0.02297752808988764, 0.01741573033707865, 0.020112359550561797, 0.01348314606741573, 0.015786516853932585, 0.014269662921348314, 0.01747191011235955, 0.016853932584269662, 0.013539325842696629]
+[Result Summary] Turbo RNN BLER is [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.98, 0.98, 0.91, 0.89, 0.89, 0.83, 0.87, 0.84, 0.86, 0.83, 0.83]

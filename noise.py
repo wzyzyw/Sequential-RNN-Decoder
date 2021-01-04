@@ -45,7 +45,7 @@ class itsnoise(Cnoise):
             "carrierfreq":13.86e6,
             "lpbw":config["bandwidth"],
             "theta_zg":2.4,
-            "gamma_zg":0.2,
+            "gamma_zg":0.15,
             "Ni":40,
             "theta_mg":1.2,
             "gamma_mg":1e-8,
