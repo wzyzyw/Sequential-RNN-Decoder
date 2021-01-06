@@ -37,7 +37,7 @@ def get_args():
     parser.add_argument('-learning_rate',  type=float, default=0.001)
     parser.add_argument('-num_epoch',  type=int, default=100)
 
-    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its'], default='its')
+    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its'], default='awgn')
     parser.add_argument('-train_snr', type=float, default=-2.0)
     parser.add_argument('-train_loss', choices = ['binary_crossentropy', 'mse', 'mae'], default='binary_crossentropy')
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
     # 记录中间过程
     save_cb = keras.callbacks.ModelCheckpoint("./tmp/weights_{epoch:02d}-{val_loss:.2f}.h5", monitor='val_loss', verbose=0,
-                                              save_best_only=False, save_weights_only=True, mode='auto', period=10)
+                                              save_best_only=False, save_weights_only=True, mode='auto', period=5)
 
  
     model.fit(x=X_feed_train, y=X_message_train, batch_size=args.batch_size,

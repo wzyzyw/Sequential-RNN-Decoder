@@ -1,5 +1,5 @@
 from turbo_rnn import load_model
-from utils import build_rnn_data_feed, get_test_sigmas,getits
+from utils import build_rnn_data_feed, get_test_sigmas
 import tensorflow as tf
 import sys
 import numpy as np
@@ -17,7 +17,7 @@ def get_args():
     parser.add_argument('-num_dec_iteration', type=int, default=6)
 
     parser.add_argument('-enc1',  type=int, default=7)
-    parser.add_argument('-enc2',  type=int, default=7)
+    parser.add_argument('-enc2',  type=int, default=5)
     parser.add_argument('-feedback',  type=int, default=7)
     parser.add_argument('-M',  type=int, default=2, help="Number of delay elements in the convolutional encoder")
 
@@ -94,12 +94,14 @@ if __name__ == '__main__':
 
     turbo_res_ber = []
     turbo_res_bler= []
-    if args.noise_type=='its':
-        its=getits(args.num_block)
+    # if args.noise_type=='its':
+    #     its=getits(args.num_block)
+    # else:
+    #     its=None
     for idx in range(len(test_sigmas)):
         start_time = time.time()
         noiser = [args.noise_type, test_sigmas[idx]]
-        X_feed_test, X_message_test = build_rnn_data_feed(args.num_block, args.block_len, noiser, codec,its=its)
+        X_feed_test, X_message_test = build_rnn_data_feed(args.num_block, args.block_len, noiser, codec)
         pd       = model.predict(X_feed_test)
         decoded_bits = np.round(pd)
 
