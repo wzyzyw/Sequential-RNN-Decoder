@@ -56,10 +56,12 @@ if __name__ == '__main__':
     sys.stdout=Logger("benchmark",sys.stdout)
     args = get_args()
 
-    M = np.array([args.M])                                       # Number of delay elements in the convolutional encoder
-    generator_matrix = np.array([[args.enc1, args.enc2]])   # Encoder of convolutional encoder
-    feedback = args.feedback                                # Feedback of convolutional encoder
-
+    # M = np.array([args.M])                                       # Number of delay elements in the convolutional encoder
+    # generator_matrix = np.array([[args.enc1, args.enc2]])   # Encoder of convolutional encoder
+    # feedback = args.feedback                                # Feedback of convolutional encoder
+    M=np.array([4]) 
+    generator_matrix=np.array([[11,13]])
+    feedback=11
     print('[testing] Turbo Code Encoder: G: ', generator_matrix,'Feedback: ', feedback,  'M: ', M)
     trellis1 = cc.Trellis(M, generator_matrix,feedback=feedback)
     trellis2 = cc.Trellis(M, generator_matrix,feedback=feedback)

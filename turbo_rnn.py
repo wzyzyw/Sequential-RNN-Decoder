@@ -183,7 +183,8 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
                **kwargs):
 
     if network_saved_path == 'default':
-        network_saved_path = './model_zoo/awgn_model_end2end/yihan_clean_ttbl_0.870905022927_snr_3.h5'
+        # network_saved_path = './model_zoo/awgn_model_end2end/yihan_clean_ttbl_0.870905022927_snr_3.h5'
+        pass
     else:
         network_saved_path = network_saved_path
 
@@ -341,12 +342,15 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
     model = Model(inputs=inputs, outputs=predictions)
     optimizer= keras.optimizers.adam(lr=learning_rate, clipnorm=1.0)
     model.compile(optimizer=optimizer,loss=loss, metrics=[errors])
-
-    try:
-        model.load_weights(network_saved_path, by_name=True)
-    except:
-        print('[RNN Model][Warning]loading weight fails!')
-        sys.exit(0)
+    if network_saved_path == 'default':
+        keras.initializers.Zeros()
+        print("init zeros")
+    else:
+        try:
+            model.load_weights(network_saved_path, by_name=True)
+        except:
+            print('[RNN Model][Warning]loading weight fails!')
+            sys.exit(0)
     #print model.summary()
     model.summary()
     layer_from = model.get_layer('time_distributed_1')

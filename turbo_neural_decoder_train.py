@@ -60,10 +60,11 @@ if __name__ == '__main__':
 
     if args.GPU_proportion < 1.00:
         from keras.backend.tensorflow_backend import set_session
-        config = tf.ConfigProto()
-        frac = args.GPU_proportion
-
-        config.gpu_options.per_process_gpu_memory_fraction = frac
+        config = tf.ConfigProto(allow_soft_placement=False,log_device_placement=False)
+        config.gpu_options.allow_growth=True
+    
+        # frac = args.GPU_proportion
+        # config.gpu_options.per_process_gpu_memory_fraction = frac
         set_session(tf.Session(config=config))
         print('[Test][Warining] Restrict GPU memory usage to 45%, enable',str(int(1/args.GPU_proportion)), 'processes')
 
@@ -96,7 +97,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     model = load_model(learning_rate=args.learning_rate,rnn_type=args.rnn_type, block_len=args.block_len,
-                       network_saved_path = args.init_nw_model, num_hidden_unit=args.num_hidden_unit,
+                        num_hidden_unit=args.num_hidden_unit,
                        interleave_array = p_array, dec_iter_num = args.num_dec_iteration, loss=args.train_loss)
 
     end_time = time.time()

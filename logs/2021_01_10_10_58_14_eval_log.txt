@@ -1,0 +1,218 @@
+Namespace(GPU_proportion=0.8, M=3, batch_size=10, block_len=88, enc1=11, enc2=13, feedback=11, fixed_var=0.0, id='799476', model_path='./tmp/weights_15-0.62.h5', noise_type='its', num_block=100, num_dec_iteration=6, num_hidden_unit=200, num_layer=2, radar_power=20.0, radar_prob=0.05, rnn_direction='bd', rnn_type='lstm', snr_points=21, snr_test_end=30.0, snr_test_start=-10.0)
+[ID] 799476
+[Test][Warining] Restrict GPU memory usage to 45%, enable 1 processes
+[Setting Parameters] Number of Block is  100
+[Convolutional Code Codec] Encoder M  [3]  Generator Matrix  [[11 13]]  Feedback  11
+[RNN Model] using model type lstm
+[RNN Model] using model path ./tmp/weights_15-0.62.h5
+[RNN Model] Block length 88
+[RNN Model] Evaluate Batch size 32
+[RNN Model] Number of decoding layers 6
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            (None, 88, 5)        0                                            
+__________________________________________________________________________________________________
+three (Lambda)                  (None, 88, 3)        0           input_1[0][0]                    
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 88, 400)      326400      three[0][0]                      
+                                                                 lambda_2[1][0]                   
+                                                                 lambda_2[3][0]                   
+                                                                 lambda_2[5][0]                   
+                                                                 lambda_2[7][0]                   
+                                                                 lambda_2[9][0]                   
+                                                                 lambda_2[11][0]                  
+                                                                 lambda_2[13][0]                  
+                                                                 lambda_2[15][0]                  
+                                                                 lambda_2[17][0]                  
+                                                                 lambda_2[19][0]                  
+                                                                 lambda_2[21][0]                  
+__________________________________________________________________________________________________
+batch_normalization_1 (BatchNor (None, 88, 400)      1600        bidirectional_1[0][0]            
+                                                                 bidirectional_1[1][0]            
+                                                                 bidirectional_1[2][0]            
+                                                                 bidirectional_1[3][0]            
+                                                                 bidirectional_1[4][0]            
+                                                                 bidirectional_1[5][0]            
+                                                                 bidirectional_1[6][0]            
+                                                                 bidirectional_1[7][0]            
+                                                                 bidirectional_1[8][0]            
+                                                                 bidirectional_1[9][0]            
+                                                                 bidirectional_1[10][0]           
+                                                                 bidirectional_1[11][0]           
+__________________________________________________________________________________________________
+bidirectional_2 (Bidirectional) (None, 88, 400)      961600      batch_normalization_1[0][0]      
+                                                                 batch_normalization_1[1][0]      
+                                                                 batch_normalization_1[2][0]      
+                                                                 batch_normalization_1[3][0]      
+                                                                 batch_normalization_1[4][0]      
+                                                                 batch_normalization_1[5][0]      
+                                                                 batch_normalization_1[6][0]      
+                                                                 batch_normalization_1[7][0]      
+                                                                 batch_normalization_1[8][0]      
+                                                                 batch_normalization_1[9][0]      
+                                                                 batch_normalization_1[10][0]     
+                                                                 batch_normalization_1[11][0]     
+__________________________________________________________________________________________________
+batch_normalization_2 (BatchNor (None, 88, 400)      1600        bidirectional_2[0][0]            
+                                                                 bidirectional_2[1][0]            
+                                                                 bidirectional_2[2][0]            
+                                                                 bidirectional_2[3][0]            
+                                                                 bidirectional_2[4][0]            
+                                                                 bidirectional_2[5][0]            
+                                                                 bidirectional_2[6][0]            
+                                                                 bidirectional_2[7][0]            
+                                                                 bidirectional_2[8][0]            
+                                                                 bidirectional_2[9][0]            
+                                                                 bidirectional_2[10][0]           
+                                                                 bidirectional_2[11][0]           
+__________________________________________________________________________________________________
+time_distributed_1 (TimeDistrib (None, 88, 1)        401         batch_normalization_2[0][0]      
+                                                                 batch_normalization_2[1][0]      
+                                                                 batch_normalization_2[2][0]      
+                                                                 batch_normalization_2[3][0]      
+                                                                 batch_normalization_2[4][0]      
+                                                                 batch_normalization_2[5][0]      
+                                                                 batch_normalization_2[6][0]      
+                                                                 batch_normalization_2[7][0]      
+                                                                 batch_normalization_2[8][0]      
+                                                                 batch_normalization_2[9][0]      
+                                                                 batch_normalization_2[10][0]     
+__________________________________________________________________________________________________
+lambda_2 (Lambda)               multiple             0           time_distributed_1[0][0]         
+                                                                 three[0][0]                      
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[0][0]               
+                                                                 time_distributed_1[1][0]         
+                                                                 lambda_2[1][0]                   
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[0][0]            
+                                                                 time_distributed_1[2][0]         
+                                                                 lambda_2[3][0]                   
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[1][0]               
+                                                                 time_distributed_1[3][0]         
+                                                                 lambda_2[5][0]                   
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[1][0]            
+                                                                 time_distributed_1[4][0]         
+                                                                 lambda_2[7][0]                   
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[2][0]               
+                                                                 time_distributed_1[5][0]         
+                                                                 lambda_2[9][0]                   
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[2][0]            
+                                                                 time_distributed_1[6][0]         
+                                                                 lambda_2[11][0]                  
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[3][0]               
+                                                                 time_distributed_1[7][0]         
+                                                                 lambda_2[13][0]                  
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[3][0]            
+                                                                 time_distributed_1[8][0]         
+                                                                 lambda_2[15][0]                  
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[4][0]               
+                                                                 time_distributed_1[9][0]         
+                                                                 lambda_2[17][0]                  
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[4][0]            
+                                                                 time_distributed_1[10][0]        
+                                                                 lambda_2[19][0]                  
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[5][0]               
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 88, 1)        0           lambda_2[0][0]                   
+                                                                 lambda_2[2][0]                   
+                                                                 lambda_2[4][0]                   
+                                                                 lambda_2[6][0]                   
+                                                                 lambda_2[8][0]                   
+                                                                 lambda_2[10][0]                  
+                                                                 lambda_2[12][0]                  
+                                                                 lambda_2[14][0]                  
+                                                                 lambda_2[16][0]                  
+                                                                 lambda_2[18][0]                  
+                                                                 lambda_2[20][0]                  
+__________________________________________________________________________________________________
+split_data_interleave (Lambda)  (None, 88, 2)        0           input_1[0][0]                    
+__________________________________________________________________________________________________
+interleave_1 (Interleave)       (None, 88, 1)        0           lambda_1[0][0]                   
+                                                                 lambda_1[2][0]                   
+                                                                 lambda_1[4][0]                   
+                                                                 lambda_1[6][0]                   
+                                                                 lambda_1[8][0]                   
+                                                                 lambda_1[10][0]                  
+__________________________________________________________________________________________________
+de_interleave_1 (DeInterleave)  (None, 88, 1)        0           lambda_1[1][0]                   
+                                                                 lambda_1[3][0]                   
+                                                                 lambda_1[5][0]                   
+                                                                 lambda_1[7][0]                   
+                                                                 lambda_1[9][0]                   
+                                                                 time_distributed_sigmoid[0][0]   
+__________________________________________________________________________________________________
+split_data_normal (Lambda)      (None, 88, 2)        0           input_1[0][0]                    
+__________________________________________________________________________________________________
+time_distributed_sigmoid (TimeD (None, 88, 1)        401         batch_normalization_2[11][0]     
+==================================================================================================
+Total params: 1,292,002
+Trainable params: 1,290,402
+Non-trainable params: 1,600
+__________________________________________________________________________________________________
+[RNN decoder]loading RNN model takes  14.708759307861328  secs
+[testing] SNR range in dB  [-10.0, -8.0, -6.0, -4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0, 22.0, 24.0, 26.0, 28.0, 30.0]
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR -10.0 RNN BER  0.3967045454545455 RNN BLER 1.0
+[testing] runnig time is 12.080841302871704
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR -8.0 RNN BER  0.3538636363636364 RNN BLER 1.0
+[testing] runnig time is 5.97003173828125
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR -6.0 RNN BER  0.3245454545454545 RNN BLER 1.0
+[testing] runnig time is 6.927488088607788
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR -4.0 RNN BER  0.2784090909090909 RNN BLER 1.0
+[testing] runnig time is 8.234975337982178
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR -2.0 RNN BER  0.23102272727272727 RNN BLER 1.0
+[testing] runnig time is 6.643232107162476
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 0.0 RNN BER  0.18477272727272728 RNN BLER 1.0
+[testing] runnig time is 5.831428527832031
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 2.0 RNN BER  0.13079545454545455 RNN BLER 1.0
+[testing] runnig time is 7.468026638031006
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 4.0 RNN BER  0.09681818181818182 RNN BLER 1.0
+[testing] runnig time is 5.918172836303711
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 6.0 RNN BER  0.06681818181818182 RNN BLER 0.99
+[testing] runnig time is 6.463712692260742
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 8.0 RNN BER  0.03590909090909091 RNN BLER 0.86
+[testing] runnig time is 6.8703484535217285
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 10.0 RNN BER  0.03375 RNN BLER 0.76
+[testing] runnig time is 6.448750972747803
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 12.0 RNN BER  0.024545454545454544 RNN BLER 0.7
+[testing] runnig time is 6.591878414154053
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
+[testing] This is SNR 14.0 RNN BER  0.03102272727272727 RNN BLER 0.55
+[testing] runnig time is 5.918680191040039
+its noise generate
+channel noise config {'carrierfreq': 13860000.0, 'lpbw': 250000.0, 'theta_zg': 2.4, 'gamma_zg': 0.15, 'Ni': 40, 'theta_mg': 1.2, 'gamma_mg': 1e-08, 'Nj': 200, 'mg_max': 2e-05, 'mg_section': (0.00045, 0.00055), 'mg_interval': 4e-06, 'theta_dz': 5, 'gamma_dz': 1, 'z1_tf': 57.43, 'z2_tf': 32.23, 'z3_tf': 12.68, 'z1_aj': 18.62, 'z2_aj': 16.62, 'z3_aj': 1.49, 'sample_interval': 5e-06}
