@@ -1,0 +1,40 @@
+Namespace(M=2, block_len=100, code_rate=5, enc1=7, enc2=5, feedback=7, id='624396', noise_type='awgn', num_block=100, num_cpu=1, num_dec_iteration=6, radar_power=20.0, radar_prob=0.05, snr_points=8, snr_test_end=2.0, snr_test_start=-1.5)
+[ID] 624396
+[testing] Turbo Code Encoder: G:  [[7 5]] Feedback:  7 M:  [2]
+[testing] SNR range in dB  [-1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0]
+[testing]SNR:  -1.5
+[testing]BER:  0.0596
+[testing]BLER:  0.5900000000000001
+[testing] This SNR runnig time is 16.198676109313965
+[testing]SNR:  -1.0
+[testing]BER:  0.0216
+[testing]BLER:  0.20999999999999996
+[testing] This SNR runnig time is 16.213664531707764
+[testing]SNR:  -0.5
+[testing]BER:  0.006
+[testing]BLER:  0.13
+[testing] This SNR runnig time is 16.44753360748291
+[testing]SNR:  0.0
+[testing]BER:  0.0035
+[testing]BLER:  0.06000000000000005
+[testing] This SNR runnig time is 16.923259973526
+[testing]SNR:  0.5
+[testing]BER:  0.0002
+[testing]BLER:  0.010000000000000009
+[testing] This SNR runnig time is 15.831887483596802
+[testing]SNR:  1.0
+[testing]BER:  0.0008
+[testing]BLER:  0.030000000000000027
+[testing] This SNR runnig time is 15.703962564468384
+[testing]SNR:  1.5
+[testing]BER:  0.0
+[testing]BLER:  0.0
+[testing] This SNR runnig time is 15.642996072769165
+[testing]SNR:  2.0
+[testing]BER:  0.0
+[testing]BLER:  0.0
+[testing] This SNR runnig time is 15.898850440979004
+[Result]SNR:  [-1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0]
+[Result]BER [0.0596, 0.0216, 0.006, 0.0035, 0.0002, 0.0008, 0.0, 0.0]
+[Result]BLER [0.5900000000000001, 0.20999999999999996, 0.13, 0.06000000000000005, 0.010000000000000009, 0.030000000000000027, 0.0, 0.0]
+[Result]Total Running time: 128.8778235912323

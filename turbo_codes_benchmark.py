@@ -27,7 +27,7 @@ def get_args():
 
     parser.add_argument('-code_rate',  type=int, default=5)
 
-    parser.add_argument('-M',  type=int, default=3)
+    parser.add_argument('-M',  type=int, default=2)
     parser.add_argument('-enc1',  type=int, default=7)
     parser.add_argument('-enc2',  type=int, default=5)
     parser.add_argument('-feedback',  type=int, default=7)
@@ -56,12 +56,9 @@ if __name__ == '__main__':
     sys.stdout=Logger("benchmark",sys.stdout)
     args = get_args()
 
-    # M = np.array([args.M])                                       # Number of delay elements in the convolutional encoder
-    # generator_matrix = np.array([[args.enc1, args.enc2]])   # Encoder of convolutional encoder
-    # feedback = args.feedback                                # Feedback of convolutional encoder
-    M=np.array([4]) 
-    generator_matrix=np.array([[11,13]])
-    feedback=11
+    M = np.array([args.M])                                       # Number of delay elements in the convolutional encoder
+    generator_matrix = np.array([[args.enc1, args.enc2]])   # Encoder of convolutional encoder
+    feedback = args.feedback                                # Feedback of convolutional encoder
     print('[testing] Turbo Code Encoder: G: ', generator_matrix,'Feedback: ', feedback,  'M: ', M)
     trellis1 = cc.Trellis(M, generator_matrix,feedback=feedback)
     trellis2 = cc.Trellis(M, generator_matrix,feedback=feedback)

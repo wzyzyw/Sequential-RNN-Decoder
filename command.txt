@@ -1,7 +1,7 @@
 训练命令
 （1）python turbo_neural_decoder_train.py -num_block_train 10000 -block_len 100 -train_snr -2 -init_nw_model ./models/turbo_models/awgn_bl100_1014.h5 -noise_type its -num_epoch 100
 （2）python turbo_neural_decoder_train.py -num_block_train 1000 -block_len 88 -train_snr -2 -init_nw_model ./models/turbo_models/awgn_bl100_1014.h5 -noise_type its -num_epoch 100 --GPU_proportion 0.8
-(3) python turbo_neural_decoder_train.py -num_block_train 1000 -block_len 88 -train_snr -2 -init_nw_model ./models/turbo_models/awgn_bl100_1014.h5 -noise_type awgn -num_epoch 30 --GPU_proportion 0.8 -enc1 11 -enc2 13 -M 3 -feedback 11
+(3) python turbo_neural_decoder_train.py -enc1 11 -enc2 13 -M 3 -feedback 11 -num_block_train 1000 -block_len 176 -train_snr -3 -init_nw_model ./models/turbo_models/awgn_bl100_1014.h5  -num_epoch 50 -noise_type awgn
 测试命令
 （1）python turbo_neural_decoder_eval.py -num_block 100 -block_len 100 -snr_test_start -1.5 -snr_test_end 2.0 -snr_points 8 -model_path ./tmp/weights_556303.h5
 （2）python turbo_neural_decoder_eval.py -num_block 100 -block_len 100 -snr_test_start -10 -snr_test_end 30.0 -snr_points 21 -model_path ./tmp/weights_556303.h5

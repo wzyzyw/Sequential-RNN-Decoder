@@ -8,6 +8,7 @@
 from numpy import array, append, zeros, exp, pi, log, empty
 from commpy.channelcoding import Trellis, conv_encode
 from commpy.utilities import dec2bitarray, bitarray2dec
+import numpy as np
 #from commpy.channelcoding.map_c import backward_recursion, forward_recursion_decoding
 
 def turbo_encode(msg_bits, trellis1, trellis2, interleaver):
