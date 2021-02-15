@@ -19,6 +19,10 @@ from keras.regularizers import l2
 # TBD: Customize Layer for future use
 #######################################
 # TBD
+def softber(y_true,y_pred):
+    return K.mean(((1.0-y_pred)**y_true)*((y_pred)**(1.0-y_true)))
+def energyloss(y_true,y_pred):
+    return K.mean((1-2*y_pred)*(-1)**y_true)
 class TurboRNNLayer(Layer):
 
     # def __init__(self, output_dim, **kwargs):
@@ -187,7 +191,10 @@ def load_model(interleave_array, dec_iter_num = 6,block_len = 1000,  network_sav
         pass
     else:
         network_saved_path = network_saved_path
-
+    if loss=='softber':
+        loss=softber
+    elif loss=='energyloss':
+        loss=energyloss
     #rnn_type    = 'lstm'    #'gru', 'lstm'
     print('[RNN Model] using model type', rnn_type)
     print('[RNN Model] using model path', network_saved_path)

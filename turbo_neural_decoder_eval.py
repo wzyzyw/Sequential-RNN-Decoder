@@ -35,7 +35,7 @@ def get_args():
 
     parser.add_argument('-batch_size',  type=int, default=10)
 
-    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its'], default='awgn')
+    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its','bikappa'], default='awgn')
     parser.add_argument('-radar_power', type=float, default=20.0)
     parser.add_argument('-radar_prob', type=float, default=0.05)
 

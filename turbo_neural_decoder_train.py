@@ -1,5 +1,5 @@
 
-from utils import build_rnn_data_feed,getits
+from utils import build_rnn_data_feed
 from turbo_rnn import load_model
 
 import sys
@@ -7,8 +7,8 @@ import numpy as np
 import time
 
 import keras
+import keras.backend as K
 import tensorflow as tf
-
 import commpy.channelcoding.convcode as cc
 import commpy.channelcoding.interleavers as RandInterlv
 from log import Logger
@@ -37,9 +37,9 @@ def get_args():
     parser.add_argument('-learning_rate',  type=float, default=0.001)
     parser.add_argument('-num_epoch',  type=int, default=100)
 
-    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its'], default='awgn')
+    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its','bikappa'], default='awgn')
     parser.add_argument('-train_snr', type=float, default=-2.0)
-    parser.add_argument('-train_loss', choices = ['binary_crossentropy', 'mse', 'mae'], default='binary_crossentropy')
+    parser.add_argument('-train_loss', choices = ['binary_crossentropy', 'mse', 'mae','softber','energyloss'], default='binary_crossentropy')
 
     parser.add_argument('-radar_power', type=float, default=20.0)
     parser.add_argument('-radar_prob', type=float, default=0.05)

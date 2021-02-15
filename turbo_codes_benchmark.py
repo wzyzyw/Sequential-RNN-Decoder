@@ -2,7 +2,7 @@ __author__ = 'yihanjiang'
 '''
 Evaluate
 '''
-from utils import  corrupt_signal, snr_db2sigma, get_test_sigmas,getits,additsnoise
+from utils import  corrupt_signal, snr_db2sigma, get_test_sigmas
 
 import numpy as np
 import time
@@ -38,7 +38,7 @@ def get_args():
     parser.add_argument('-snr_test_end', type=float, default=2.0)
     parser.add_argument('-snr_points', type=int, default=8)
 
-    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its' ], default='awgn')
+    parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its', 'bikappa' ], default='awgn')
     parser.add_argument('-radar_power', type=float, default=20.0)
     parser.add_argument('-radar_prob', type=float, default=0.05)
 
@@ -70,8 +70,6 @@ if __name__ == '__main__':
     turbo_res_ber, turbo_res_bler= [], []
 
     tic = time.time()
-    if args.noise_type=="its":
-        its=getits(args.num_block)
     def turbo_compute(idx,x):# x没有使用到
         '''
         Compute Turbo Decoding in 1 iterations for one SNR point.
@@ -83,8 +81,7 @@ if __name__ == '__main__':
         sys_r  = corrupt_signal(sys, noise_type = args.noise_type, sigma = test_sigmas[idx])
         par1_r = corrupt_signal(par1, noise_type = args.noise_type, sigma = test_sigmas[idx])
         par2_r = corrupt_signal(par2, noise_type = args.noise_type, sigma = test_sigmas[idx])
-        if args.noise_type=='its':
-            sys_r,par1_r,par2_r=additsnoise(its[x],sys_r,par1_r,par2_r)
+
         decoded_bits = turbo.hazzys_g_turbo_decode(sys_r, par1_r, par2_r, trellis1,
                                                  test_sigmas[idx]**2, args.num_dec_iteration , interleaver, L_int = None)
        

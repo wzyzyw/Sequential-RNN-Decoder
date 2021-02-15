@@ -12,7 +12,8 @@ import commpy.channelcoding.turbo as turbo
 from scipy import stats
 import keras.backend as K
 import tensorflow as tf
-from noise import itsnoise
+from noise import bikappa
+bikappaobj=bikappa()
 #######################################
 # Interleaving Helper Functions
 #######################################
@@ -30,36 +31,6 @@ def direct_subtract(in1,in2):
     out = in1
     out[:,:,2] = in1[:,:,2] - in2
     return out
-# get its noise
-def getits(num_block):
-    sps=1
-    bandwidth=250e3
-    roll_off=0.25
-    baud_rate=bandwidth/(1+roll_off)
-    sample_rate=baud_rate/sps
-    sample_interval=1/sample_rate
-    params={
-        "sps":sps,
-        "bandwidth":bandwidth,
-        "roll_off":roll_off,
-        "baud_rate":baud_rate,
-        "sample_rate":sample_rate,
-        "sample_interval":sample_interval,
-        "Nr":2,
-    }
-    # currently, the number of its noise is denpent to the number of data blocks
-    hnum=num_block
-    itsobj=itsnoise(params,hnum)
-    its=itsobj.getits()
-    return its
-def additsnoise(noise,sys_r,par1_r,par2_r):
-    if noise is None:
-        raise Exception("need its noise but not generate noise")
-    else:
-        sys_r=sys_r+noise*np.ones(sys_r.shape)
-        par1_r=par1_r+noise*np.ones(par1_r.shape)
-        par2_r=par2_r+noise*np.ones(par2_r.shape)
-    return (sys_r,par1_r,par2_r)
 #######################################
 # Noise Helper Function
 #######################################
@@ -83,10 +54,14 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
 
     data_shape = input_signal.shape  # input_signal has to be a numpy array.
 
-    if noise_type in ['awgn','its']:
+    if noise_type == 'awgn':
         noise = sigma * np.random.standard_normal(data_shape) # Define noise
         corrupted_signal = 2.0*input_signal-1.0 + noise
-
+    elif noise_type == 'bikappa':
+        noise_shape=(data_shape[0],1)
+        noise=sigma*bikappaobj.getbikappa(noise_shape)
+        noise=noise[:,0]
+        corrupted_signal=2.0*input_signal-1.0+noise
     elif noise_type == 't-dist':
         noise = sigma * math.sqrt((vv-2)/vv) *np.random.standard_t(vv, size = data_shape)
         corrupted_signal = 2.0*input_signal-1.0 + noise
@@ -294,8 +269,8 @@ def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False
         par2_r = corrupt_signal(par2, noise_type =noise_type, sigma = noise_sigma,
                                vv =vv, radar_power = radar_power, radar_prob = radar_prob, denoise_thd = denoise_thd,
                                snr_mixture = snr_mix)
-        if noise_type=='its':
-            sys_r,par1_r,par2_r=additsnoise(its[nbb],sys_r,par1_r,par2_r)
+        # if noise_type=='its':
+        #     sys_r,par1_r,par2_r=additsnoise(its[nbb],sys_r,par1_r,par2_r)
         rnn_feed_raw = np.stack([sys_r, par1_r, np.zeros(sys_r.shape), intleave(sys_r, p_array), par2_r], axis = 0).T
         rnn_feed = rnn_feed_raw
 
