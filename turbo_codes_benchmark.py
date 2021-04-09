@@ -43,7 +43,7 @@ def get_args():
     parser.add_argument('-radar_prob', type=float, default=0.05)
 
     parser.add_argument('-id', type=str, default=str(np.random.random())[2:8])
-
+    parser.add_argument('-mod_type',type=str,default='16QAM')
     args = parser.parse_args()
     print(args)
     print('[ID]', args.id)
@@ -78,9 +78,9 @@ if __name__ == '__main__':
         message_bits = np.random.randint(0, 2, args.block_len)
         [sys, par1, par2] = turbo.turbo_encode(message_bits, trellis1, trellis2, interleaver)
 
-        sys_r  = corrupt_signal(sys, noise_type = args.noise_type, sigma = test_sigmas[idx])
-        par1_r = corrupt_signal(par1, noise_type = args.noise_type, sigma = test_sigmas[idx])
-        par2_r = corrupt_signal(par2, noise_type = args.noise_type, sigma = test_sigmas[idx])
+        sys_r  = corrupt_signal(sys, noise_type = args.noise_type, sigma = test_sigmas[idx],modulate_mode=args.mod_type)
+        par1_r = corrupt_signal(par1, noise_type = args.noise_type, sigma = test_sigmas[idx],modulate_mode=args.mod_type)
+        par2_r = corrupt_signal(par2, noise_type = args.noise_type, sigma = test_sigmas[idx],modulate_mode=args.mod_type)
 
         decoded_bits = turbo.hazzys_g_turbo_decode(sys_r, par1_r, par2_r, trellis1,
                                                  test_sigmas[idx]**2, args.num_dec_iteration , interleaver, L_int = None)

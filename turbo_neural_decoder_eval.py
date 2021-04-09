@@ -12,8 +12,8 @@ def get_args():
     import argparse
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-num_block', type=int, default=2000)
-    parser.add_argument('-block_len', type=int, default=100)
+    parser.add_argument('-num_block', type=int, default=1000)
+    parser.add_argument('-block_len', type=int, default=88*4)
     parser.add_argument('-num_dec_iteration', type=int, default=6)
 
     parser.add_argument('-enc1',  type=int, default=7)
@@ -22,11 +22,11 @@ def get_args():
     parser.add_argument('-M',  type=int, default=2, help="Number of delay elements in the convolutional encoder")
 
 
-    parser.add_argument('-snr_test_start', type=float, default=-1.5)
-    parser.add_argument('-snr_test_end', type=float, default=2.0)
-    parser.add_argument('-snr_points', type=int, default=8)
+    parser.add_argument('-snr_test_start', type=float, default=-6.0)
+    parser.add_argument('-snr_test_end', type=float, default=8.0)
+    parser.add_argument('-snr_points', type=int, default=29)
 
-    parser.add_argument('-model_path', type=str, default='./models/turbo_models/awgn_bl100_1014.h5')
+    parser.add_argument('-model_path', type=str, default='./models/turbo_models/weights_663743.h5')
 
     parser.add_argument('-rnn_type', choices = ['lstm', 'gru'], default = 'lstm')
     parser.add_argument('-rnn_direction', choices = ['bd', 'sd'], default = 'bd')
@@ -42,7 +42,7 @@ def get_args():
     parser.add_argument('-fixed_var', type=float, default=0.00)
     parser.add_argument('--GPU_proportion', type=float, default=1.00)
     parser.add_argument('-id', type=str, default=str(np.random.random())[2:8])
-
+    parser.add_argument('-mod_type',type=str,default='16QAM')
     args = parser.parse_args()
     print(args)
     print('[ID]', args.id)
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     for idx in range(len(test_sigmas)):
         start_time = time.time()
         noiser = [args.noise_type, test_sigmas[idx]]
-        X_feed_test, X_message_test = build_rnn_data_feed(args.num_block, args.block_len, noiser, codec)
+        X_feed_test, X_message_test = build_rnn_data_feed(args.num_block, args.block_len, noiser, codec,mod_type=args.mod_type)
         pd       = model.predict(X_feed_test)
         decoded_bits = np.round(pd)
 

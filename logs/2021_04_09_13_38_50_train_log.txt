@@ -1,0 +1,173 @@
+Namespace(GPU_proportion=1.0, M=2, batch_size=10, block_len=88, enc1=7, enc2=5, feedback=7, fixed_var=0.0, id='331258', init_nw_model='./models/turbo_models/awgn_bl100_1014.h5', learning_rate=0.001, mod_type='BPSK', noise_type='awgn', num_block_test=100, num_block_train=1000, num_dec_iteration=6, num_epoch=200, num_hidden_unit=200, num_layer=2, radar_power=20.0, radar_prob=0.05, rnn_direction='bd', rnn_type='lstm', train_loss='binary_crossentropy', train_snr=0.0)
+[ID] 331258
+use_gpu= ['/job:localhost/replica:0/task:0/device:GPU:0']
+[Setting Parameters] Number of Train Block is  1000  Test Block  100
+[Setting Parameters] Turbo Decoding Iteration is  6
+[Setting Parameters] Noise Type is  awgn
+[Setting Parameters] Training Data SNR is  0.0  dB
+[Setting Parameters] Training Loss is  binary_crossentropy
+[Setting Parameters] Network starting path is  ./models/turbo_models/awgn_bl100_1014.h5
+[Setting Parameters]Trained Model Weight saving path is at:  ./tmp331258
+[Setting Parameters]Initial learning_rate is  0.001
+[Setting Parameters]Training batch_size is  10
+[Setting Parameters]Training num_epoch is  200
+[Setting Parameters]RNN Number of hidden unit  200
+[Setting Parameters]RNN type is   lstm
+[Convolutional Code Codec] Encoder M  [2]  Generator Matrix  [[7 5]]  Feedback  7
+[RNN Model] using model type lstm
+[RNN Model] using model path ./models/turbo_models/awgn_bl100_1014.h5
+[RNN Model] Block length 88
+[RNN Model] Evaluate Batch size 32
+[RNN Model] Number of decoding layers 6
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            (None, 88, 5)        0                                            
+__________________________________________________________________________________________________
+three (Lambda)                  (None, 88, 3)        0           input_1[0][0]                    
+__________________________________________________________________________________________________
+bidirectional_1 (Bidirectional) (None, 88, 400)      326400      three[0][0]                      
+                                                                 lambda_2[1][0]                   
+                                                                 lambda_2[3][0]                   
+                                                                 lambda_2[5][0]                   
+                                                                 lambda_2[7][0]                   
+                                                                 lambda_2[9][0]                   
+                                                                 lambda_2[11][0]                  
+                                                                 lambda_2[13][0]                  
+                                                                 lambda_2[15][0]                  
+                                                                 lambda_2[17][0]                  
+                                                                 lambda_2[19][0]                  
+                                                                 lambda_2[21][0]                  
+__________________________________________________________________________________________________
+batch_normalization_1 (BatchNor (None, 88, 400)      1600        bidirectional_1[0][0]            
+                                                                 bidirectional_1[1][0]            
+                                                                 bidirectional_1[2][0]            
+                                                                 bidirectional_1[3][0]            
+                                                                 bidirectional_1[4][0]            
+                                                                 bidirectional_1[5][0]            
+                                                                 bidirectional_1[6][0]            
+                                                                 bidirectional_1[7][0]            
+                                                                 bidirectional_1[8][0]            
+                                                                 bidirectional_1[9][0]            
+                                                                 bidirectional_1[10][0]           
+                                                                 bidirectional_1[11][0]           
+__________________________________________________________________________________________________
+bidirectional_2 (Bidirectional) (None, 88, 400)      961600      batch_normalization_1[0][0]      
+                                                                 batch_normalization_1[1][0]      
+                                                                 batch_normalization_1[2][0]      
+                                                                 batch_normalization_1[3][0]      
+                                                                 batch_normalization_1[4][0]      
+                                                                 batch_normalization_1[5][0]      
+                                                                 batch_normalization_1[6][0]      
+                                                                 batch_normalization_1[7][0]      
+                                                                 batch_normalization_1[8][0]      
+                                                                 batch_normalization_1[9][0]      
+                                                                 batch_normalization_1[10][0]     
+                                                                 batch_normalization_1[11][0]     
+__________________________________________________________________________________________________
+batch_normalization_2 (BatchNor (None, 88, 400)      1600        bidirectional_2[0][0]            
+                                                                 bidirectional_2[1][0]            
+                                                                 bidirectional_2[2][0]            
+                                                                 bidirectional_2[3][0]            
+                                                                 bidirectional_2[4][0]            
+                                                                 bidirectional_2[5][0]            
+                                                                 bidirectional_2[6][0]            
+                                                                 bidirectional_2[7][0]            
+                                                                 bidirectional_2[8][0]            
+                                                                 bidirectional_2[9][0]            
+                                                                 bidirectional_2[10][0]           
+                                                                 bidirectional_2[11][0]           
+__________________________________________________________________________________________________
+time_distributed_1 (TimeDistrib (None, 88, 1)        401         batch_normalization_2[0][0]      
+                                                                 batch_normalization_2[1][0]      
+                                                                 batch_normalization_2[2][0]      
+                                                                 batch_normalization_2[3][0]      
+                                                                 batch_normalization_2[4][0]      
+                                                                 batch_normalization_2[5][0]      
+                                                                 batch_normalization_2[6][0]      
+                                                                 batch_normalization_2[7][0]      
+                                                                 batch_normalization_2[8][0]      
+                                                                 batch_normalization_2[9][0]      
+                                                                 batch_normalization_2[10][0]     
+__________________________________________________________________________________________________
+lambda_2 (Lambda)               multiple             0           time_distributed_1[0][0]         
+                                                                 three[0][0]                      
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[0][0]               
+                                                                 time_distributed_1[1][0]         
+                                                                 lambda_2[1][0]                   
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[0][0]            
+                                                                 time_distributed_1[2][0]         
+                                                                 lambda_2[3][0]                   
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[1][0]               
+                                                                 time_distributed_1[3][0]         
+                                                                 lambda_2[5][0]                   
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[1][0]            
+                                                                 time_distributed_1[4][0]         
+                                                                 lambda_2[7][0]                   
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[2][0]               
+                                                                 time_distributed_1[5][0]         
+                                                                 lambda_2[9][0]                   
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[2][0]            
+                                                                 time_distributed_1[6][0]         
+                                                                 lambda_2[11][0]                  
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[3][0]               
+                                                                 time_distributed_1[7][0]         
+                                                                 lambda_2[13][0]                  
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[3][0]            
+                                                                 time_distributed_1[8][0]         
+                                                                 lambda_2[15][0]                  
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[4][0]               
+                                                                 time_distributed_1[9][0]         
+                                                                 lambda_2[17][0]                  
+                                                                 split_data_normal[0][0]          
+                                                                 de_interleave_1[4][0]            
+                                                                 time_distributed_1[10][0]        
+                                                                 lambda_2[19][0]                  
+                                                                 split_data_interleave[0][0]      
+                                                                 interleave_1[5][0]               
+__________________________________________________________________________________________________
+lambda_1 (Lambda)               (None, 88, 1)        0           lambda_2[0][0]                   
+                                                                 lambda_2[2][0]                   
+                                                                 lambda_2[4][0]                   
+                                                                 lambda_2[6][0]                   
+                                                                 lambda_2[8][0]                   
+                                                                 lambda_2[10][0]                  
+                                                                 lambda_2[12][0]                  
+                                                                 lambda_2[14][0]                  
+                                                                 lambda_2[16][0]                  
+                                                                 lambda_2[18][0]                  
+                                                                 lambda_2[20][0]                  
+__________________________________________________________________________________________________
+split_data_interleave (Lambda)  (None, 88, 2)        0           input_1[0][0]                    
+__________________________________________________________________________________________________
+interleave_1 (Interleave)       (None, 88, 1)        0           lambda_1[0][0]                   
+                                                                 lambda_1[2][0]                   
+                                                                 lambda_1[4][0]                   
+                                                                 lambda_1[6][0]                   
+                                                                 lambda_1[8][0]                   
+                                                                 lambda_1[10][0]                  
+__________________________________________________________________________________________________
+de_interleave_1 (DeInterleave)  (None, 88, 1)        0           lambda_1[1][0]                   
+                                                                 lambda_1[3][0]                   
+                                                                 lambda_1[5][0]                   
+                                                                 lambda_1[7][0]                   
+                                                                 lambda_1[9][0]                   
+                                                                 time_distributed_sigmoid[0][0]   
+__________________________________________________________________________________________________
+split_data_normal (Lambda)      (None, 88, 2)        0           input_1[0][0]                    
+__________________________________________________________________________________________________
+time_distributed_sigmoid (TimeD (None, 88, 1)        401         batch_normalization_2[11][0]     
+==================================================================================================
+Total params: 1,292,002
+Trainable params: 1,290,402
+Non-trainable params: 1,600
+__________________________________________________________________________________________________

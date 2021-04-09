@@ -5,20 +5,20 @@ from turbo_rnn import load_model
 import sys
 import numpy as np
 import time
-
+import tensorflow
 import keras
 import keras.backend as K
 import tensorflow as tf
 import commpy.channelcoding.convcode as cc
 import commpy.channelcoding.interleavers as RandInterlv
 from log import Logger
-
+import h5py
 def get_args():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-num_block_train', type=int, default=10000)
+    parser.add_argument('-num_block_train', type=int, default=1000)
     parser.add_argument('-num_block_test', type=int, default=100)
-    parser.add_argument('-block_len', type=int, default=100)
+    parser.add_argument('-block_len', type=int, default=86)
     parser.add_argument('-num_dec_iteration', type=int, default=6)
 
     parser.add_argument('-enc1',  type=int, default=7)
@@ -35,10 +35,10 @@ def get_args():
 
     parser.add_argument('-batch_size',  type=int, default=10)
     parser.add_argument('-learning_rate',  type=float, default=0.001)
-    parser.add_argument('-num_epoch',  type=int, default=100)
+    parser.add_argument('-num_epoch',  type=int, default=200)
 
     parser.add_argument('-noise_type', choices = ['awgn', 't-dist','hyeji_bursty','its','bikappa'], default='awgn')
-    parser.add_argument('-train_snr', type=float, default=-2.0)
+    parser.add_argument('-train_snr', type=float, default=0.0)
     parser.add_argument('-train_loss', choices = ['binary_crossentropy', 'mse', 'mae','softber','energyloss'], default='binary_crossentropy')
 
     parser.add_argument('-radar_power', type=float, default=20.0)
@@ -47,7 +47,7 @@ def get_args():
     parser.add_argument('-fixed_var', type=float, default=0.00)
     parser.add_argument('--GPU_proportion', type=float, default=1.00)
     parser.add_argument('-id', type=str, default=str(np.random.random())[2:8])
-
+    parser.add_argument('-mod_type',type=str,default='BPSK')
     args = parser.parse_args()
     print(args)
     print('[ID]', args.id)
@@ -57,7 +57,8 @@ if __name__ == '__main__':
     # log setting
     sys.stdout=Logger("train",sys.stdout)
     args = get_args()
-
+    
+    print("use_gpu=",keras.backend.tensorflow_backend._get_available_gpus())
     if args.GPU_proportion < 1.00:
         from keras.backend.tensorflow_backend import set_session
         config = tf.ConfigProto(allow_soft_placement=False,log_device_placement=False)
@@ -95,17 +96,10 @@ if __name__ == '__main__':
 
 
     start_time = time.time()
-
-    model = load_model(learning_rate=args.learning_rate,rnn_type=args.rnn_type, block_len=args.block_len,
-                        num_hidden_unit=args.num_hidden_unit,
-                       interleave_array = p_array, dec_iter_num = args.num_dec_iteration, loss=args.train_loss)
-
-    end_time = time.time()
-    print('[RNN decoder]loading RNN model takes ', str(end_time-start_time), ' secs')
-
     ##########################################
     # Setting Up Channel & Train SNR
     ##########################################
+    
     train_snr_Es = args.train_snr + 10*np.log10(float(args.block_len)/float(2*args.block_len))
     sigma_snr  = np.sqrt(1/(2*10**(float(train_snr_Es)/float(10))))
     SNR = -10*np.log10(sigma_snr**2)
@@ -113,19 +107,32 @@ if __name__ == '__main__':
     noiser = [args.noise_type, sigma_snr]  # For now only AWGN is supported
     start_time = time.time()
 
-    X_feed_test, X_message_test = build_rnn_data_feed(args.num_block_test,  args.block_len, noiser, codec)
-    X_feed_train,X_message_train= build_rnn_data_feed(args.num_block_train, args.block_len, noiser, codec)
+    X_feed_test, X_message_test = build_rnn_data_feed(args.num_block_test,  args.block_len, noiser, codec,mod_type=args.mod_type)
+    X_feed_train,X_message_train= build_rnn_data_feed(args.num_block_train, args.block_len, noiser, codec,mod_type=args.mod_type)
+    
+    ##########################################
+    # load model
+    ##########################################
+    model = load_model(learning_rate=args.learning_rate,rnn_type=args.rnn_type, block_len=args.block_len,network_saved_path=args.init_nw_model,
+                        num_hidden_unit=args.num_hidden_unit,
+                    interleave_array = p_array, dec_iter_num = args.num_dec_iteration, loss=args.train_loss)
+
+    end_time = time.time()
+    print('[RNN decoder]loading RNN model takes ', str(end_time-start_time), ' secs')
+
+    
+
 
     save_path = './tmp/weights_' + args.id+ '.h5'
     print('[Warning] Save every epoch', './tmp/weights_' + args.id+ '.h5')
 
     # 记录中间过程
     save_cb = keras.callbacks.ModelCheckpoint("./tmp/weights_{epoch:02d}-{val_loss:.2f}.h5", monitor='val_loss', verbose=0,
-                                              save_best_only=False, save_weights_only=True, mode='auto', period=5)
+                                            save_best_only=False, save_weights_only=True, mode='auto', period=5)
 
- 
+
     model.fit(x=X_feed_train, y=X_message_train, batch_size=args.batch_size,
-              epochs=args.num_epoch, validation_data=(X_feed_test, X_message_test),callbacks=[save_cb])  # starts training
+            epochs=args.num_epoch, validation_data=(X_feed_test, X_message_test),callbacks=[save_cb])  # starts training
 
 
     print('[Training] saved model in ', save_path)
@@ -138,5 +145,5 @@ if __name__ == '__main__':
     print('[Training]RNN turbo decoding has error rate ', err_rate)
     end_time = time.time()
     print('[Trainiing]Training time is', str(end_time-start_time))
-
+    print("model train finish!")
 

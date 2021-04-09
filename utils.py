@@ -8,12 +8,15 @@ SHall involve:
 import numpy as np
 import math
 import commpy.channelcoding.turbo as turbo
-
+from matinterface import Cmatlab
 from scipy import stats
 import keras.backend as K
 import tensorflow as tf
 from noise import bikappa
+from commpy.modulation import QAMModem as pmod
 bikappaobj=bikappa()
+matlabinterface=Cmatlab()
+
 #######################################
 # Interleaving Helper Functions
 #######################################
@@ -51,17 +54,37 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
     :param radar_prob:
     :return:
     '''
-
-    data_shape = input_signal.shape  # input_signal has to be a numpy array.
-
+    if modulate_mode=='BPSK':
+        bps=1
+    elif modulate_mode=='QPSK':
+        bps=2
+    elif modulate_mode=='16QAM':
+        bps=4
+    data_shape = list(input_signal.shape)
+    data_shape[0]=int(data_shape[0]/bps) # input_signal has to be a numpy array.
+    pymod=pmod(2**bps)
     if noise_type == 'awgn':
         noise = sigma * np.random.standard_normal(data_shape) # Define noise
-        corrupted_signal = 2.0*input_signal-1.0 + noise
+        if modulate_mode=='BPSK':
+            corrupted_signal = 2.0*input_signal-1.0 + noise
+        else:
+            tmp=input_signal.reshape((-1,1))
+            # tmp=matlabinterface.modulate(modulate_mode,tmp)+noise.reshape((-1,1))
+            tmp=pymod.modulate(tmp)[:,0]+noise
+            # corrupted_signal =matlabinterface.demodulate(modulate_mode,tmp,True,sigma**2)
+            corrupted_signal=pymod.demodulate(tmp,'soft',sigma**2)
+            # corrupted_signal=corrupted_signal[:,0]
     elif noise_type == 'bikappa':
         noise_shape=(data_shape[0],1)
         noise=sigma*bikappaobj.getbikappa(noise_shape)
         noise=noise[:,0]
-        corrupted_signal=2.0*input_signal-1.0+noise
+        if modulate_mode=='BPSK':
+            corrupted_signal = 2.0*input_signal-1.0 + noise
+        else:
+            tmp=input_signal.reshape((-1,1))
+            tmp=matlabinterface.modulate(modulate_mode,tmp)+noise.reshape((-1,1))
+            corrupted_signal=matlabinterface.demodulate(modulate_mode,tmp,True,sigma**2)
+            corrupted_signal=corrupted_signal[:,0]
     elif noise_type == 't-dist':
         noise = sigma * math.sqrt((vv-2)/vv) *np.random.standard_t(vv, size = data_shape)
         corrupted_signal = 2.0*input_signal-1.0 + noise
@@ -186,7 +209,7 @@ def corrupt_signal(input_signal, noise_type, sigma = 1.0,
 # Build RNN Feed Helper Function (for Turbo Code only, need to refactor)
 #######################################
 
-def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False ,is_same_code = False,its=None, **kwargs):
+def build_rnn_data_feed(num_block, block_len, noiser, codec,is_all_zero = False ,is_same_code = False,its=None,mod_type='BPSK', **kwargs):
     '''
 
     :param num_block:
@@ -262,13 +285,13 @@ def build_rnn_data_feed(num_block, block_len, noiser, codec, is_all_zero = False
 
         sys_r  = corrupt_signal(sys, noise_type =noise_type, sigma = noise_sigma,
                                vv =vv, radar_power = radar_power, radar_prob = radar_prob, denoise_thd = denoise_thd,
-                               snr_mixture = snr_mix)
+                               modulate_mode=mod_type,snr_mixture = snr_mix)
         par1_r = corrupt_signal(par1, noise_type =noise_type, sigma = noise_sigma,
                                vv =vv, radar_power = radar_power, radar_prob = radar_prob, denoise_thd = denoise_thd,
-                               snr_mixture = snr_mix)
+                               modulate_mode=mod_type,snr_mixture = snr_mix)
         par2_r = corrupt_signal(par2, noise_type =noise_type, sigma = noise_sigma,
                                vv =vv, radar_power = radar_power, radar_prob = radar_prob, denoise_thd = denoise_thd,
-                               snr_mixture = snr_mix)
+                               modulate_mode=mod_type,snr_mixture = snr_mix)
         # if noise_type=='its':
         #     sys_r,par1_r,par2_r=additsnoise(its[nbb],sys_r,par1_r,par2_r)
         rnn_feed_raw = np.stack([sys_r, par1_r, np.zeros(sys_r.shape), intleave(sys_r, p_array), par2_r], axis = 0).T
